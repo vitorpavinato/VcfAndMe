@@ -6,13 +6,12 @@ In `annotate_vcf` I tried to go a step further providing tools and ideas for var
 
 Table of Content:
 
-- [Remake vcf file](#Remake-vcf-file)
-- [Annotate vcf SNPs](#Annotate-vcf-SNPs)
-- [Create SFSs sets](#Create-SFSs-sets)
+- [Remake vcf files](#Remake-vcf-files)
+- [Annotate SNPs](#Annotate-SNPs)
 
 
-### Remake vcf file
+### Remake vcf files
 Follow the steps on the `remake_vcf` page to make DGN files usable (might seems restricted to Dmel world, but if you have individual genomes in MSA files you should be able to use most of the tools).
 
-### Annotate vcf SNPs
+### Annotate SNPs
 Tools for variant annotation and vcf to tsv conversion (should work with any species)
