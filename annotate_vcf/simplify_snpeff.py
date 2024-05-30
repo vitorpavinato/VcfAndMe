@@ -123,10 +123,15 @@ def simplify_snpeff_default(file: str, outfile: str = None,
             # Split the EFF field by commas to separete the SNPEff annotation
             aa, ac, af, snpeffs, *lo = info_field.split(';')
 
-            # Check if any ReverseComplementedAlleles is present
+            # Check if any ReverseComplementedAlleles or SwappedAlleles is present
             # in any SNPEff annotation entry and deal with it
-            if (snpeffs == "ReverseComplementedAlleles"):
+            if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles"):
                 _, snpeffann, = lo[0].split("EFF=")
+
+                # Update ID field with ReverseComplementedAlleles
+                # or SwappedAlleles as needed
+                fields[2] = fields[2] + "+" + snpeffs
+
             else:
                 _, snpeffann, = snpeffs.split("EFF=")
 
@@ -201,10 +206,15 @@ def simplify_snpeff_with_custom_annotation(
             # Split the EFF field by commas to separete the SNPEff annotation
             aa, ac, af, snpeffs, *lo = info_field.split(';')
 
-            # Check if any ReverseComplementedAlleles is present
+            # Check if any ReverseComplementedAlleles or SwappedAlleles is present
             # in any SNPEff annotation entry and deal with it
-            if (snpeffs == "ReverseComplementedAlleles"):
+            if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles"):
                 _, snpeffann, = lo[0].split("EFF=")
+
+                # Update ID field with ReverseComplementedAlleles
+                # or SwappedAlleles as needed
+                fields[2] = fields[2] + "+" + snpeffs
+
             else:
                 _, snpeffann, = snpeffs.split("EFF=")
 
