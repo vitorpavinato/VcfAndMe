@@ -53,7 +53,7 @@ python vcf_to_tsv.py -i examples/sift4g/example_remade_rooted_lifted_filtered_an
 
 Here is the complete list of arguments:
 ```zsh
-usage: python vcf_to_table.py [-h] -i INPUTFILE [-o OUTPUTFILE] -r REFERENCE -s SAMTOOLS_PATH [-f NFLANKINBPS] [-c CUSTOM_EFFECT_NAME] [-n NEW_CUSTOM_EFFECT_NAME] [-e]
+usage: python vcf_to_tsv.py [-h] -i INPUTFILE [-o OUTPUTFILE] -r REFERENCE -s SAMTOOLS_PATH [-f NFLANKINBPS] [-c CUSTOM_EFFECT_NAME] [-n NEW_CUSTOM_EFFECT_NAME] [-e]
 
 options:
   -h, --help            show this help message and exit

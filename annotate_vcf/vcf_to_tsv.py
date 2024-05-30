@@ -84,7 +84,7 @@ def parseargs():
     """
     Function defines command-line parsing arguments.
     """
-    parser = argparse.ArgumentParser("python vcf_to_table.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser("python vcf_to_tsv.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-i", help="Input vcf file name", dest="inputfile", required=True, type=str)
     parser.add_argument("-o", help="Output tsv file name", dest="outputfile", default=None, type=str)
     parser.add_argument("-r", help="Path to the reference genome of the vcf file", dest="reference", required=True, type=str)
