@@ -1,6 +1,8 @@
-## Drosophila melanogaster data (Dmel_data)
+## VcfAndMe
 
-This repository documents the steps to obtain a pair of Site-frequency Spectrums to test our method PRFratio for the estimation of $2Ns$.
+Here I have developed some tools to work with `vcf` files. I started working on the ideas presented here in a project I need to deal with polymorphism data of two *Drosophila melanogaster* populations. The tools present in `remake_vcf` were motivated by the fact that Dmel data on [DGN](https://www.johnpool.net/genomes.html), besides being a great database that makes available a ton of population genomics data, all of that aligned and process with the same bioinformatics tools, weren't ready to use as vcfs files. I provide the steps and some tools to have these vcfs from multiple sequence alignment (MSA) files. I also provide a tool for rooting a vcf, by parsimony, using the alignment between Dmel and *Drosophila simulans*. 
+
+In `annotate_vcf` I tried to go a step further providing tools and ideas for variant annotation. Basically I developed a pipeline for annotation using [SNPEff](https://pcingola.github.io/SnpEff/) and [SIFT4g](https://sift.bii.a-star.edu.sg/sift4g/), and a tool to convert an annotated vcf to a table.
 
 Table of Content:
 
@@ -10,10 +12,7 @@ Table of Content:
 
 
 ### Remake vcf file
-Follow the steps on the `remake_vcf` page to make DGN files usable (the steps also lift it over to the newes Dmel genome building).
+Follow the steps on the `remake_vcf` page to make DGN files usable (might seems restricted to Dmel world, but if you have individual genomes in MSA files you should be able to use most of the tools).
 
 ### Annotate vcf SNPs
-One jupiter notebook in `annotate_vcf` folder that documents all the steps to annotate `.vcf` files.
-
-### Create SFSs sets
-Another jupyter notebooks in `sfs_vcf` folder with all steps to get the pairs of SFSs.
+Tools for variant annotation and vcf to tsv conversion (should work with any species)
