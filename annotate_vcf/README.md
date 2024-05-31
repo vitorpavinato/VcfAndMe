@@ -73,3 +73,7 @@ options:
 - `simplify_snpeff.py` only takes the first term from SNPEff annotation. For bi-allelic SNPs, the first term should be the important one (with the annotation of the most impacted change); but for tri-allelic there are the issue with the most important annotation per allele, and which allele is the most (or least) common one. Right now, the script picks the first term, regardless of all these issues for tri-allelic(s). ADVICE: remove tri-allelics before running this pipeline.
 - `vcf_to_tsv.py` also had to deal with tri-allelic SNPs in SIFT4g annotations. I did a quick fix to baypass it. It basica disregard the second annotated term, basically discarding the functional annotation of the second alternative allele. Because of it, the logic would be to remove tri-allelic SNPs.
 - `get_reversed_complementary_strand()` also doesn't know how to deal with tri-allelics.
+
+### ToDo's:
+- Implement annotation based on sift scores for synonymous sites (low);
+- Should be able to specify the sift score threshold for deleterious/tolereted mutations (low);
