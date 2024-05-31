@@ -77,3 +77,4 @@ options:
 ### ToDo's:
 - Implement annotation based on sift scores for synonymous sites (low);
 - Should be able to specify the sift score threshold for deleterious/tolereted mutations (low);
+- Right now sift4g command threshould is hard-coded in the pipeline: results should be the same for nonsynonymous mutations
