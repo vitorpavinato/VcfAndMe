@@ -14,7 +14,7 @@ def get_reversed_complementary_strand(sequence: str) -> str:
     Find the complementary strand and reverse to 5' to 3'.
     """
     # This is a dictionary with the complement nucleotides
-    nt_pairs = {"A": "T", "T": "A", "G": "C", "C": "G"}
+    nt_pairs = {"A": "T", "T": "A", "G": "C", "C": "G", "N": "N"}
 
     # Cast the input sequence to a list
     sequence = list(sequence)
