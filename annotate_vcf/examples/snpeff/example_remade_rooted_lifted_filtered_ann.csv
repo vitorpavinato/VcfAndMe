@@ -3,16 +3,16 @@
 
 Name , Value
 Genome , Drosophila_melanogaster 
-Date , 2024-05-29 09:01
+Date , 2024-06-07 15:25
 SnpEff_version , SnpEff 5.1f (build 2023-07-21 13:58), by Pablo Cingolani
-Command_line_arguments , SnpEff  -classic -noStats -csvStats annotate_vcf/examples/snpeff/example_remade_rooted_lifted_filtered_ann.csv Drosophila_melanogaster annotate_vcf/examples/biallelic/example_remade_rooted_lifted_filtered.vcf 
+Command_line_arguments , SnpEff  -classic -noStats -csvStats examples/snpeff/example_remade_rooted_lifted_filtered_ann.csv Drosophila_melanogaster examples/biallelic/example_remade_rooted_lifted_filtered.vcf 
 Warnings , 0 
 Number_of_lines_in_input_file, 3120
 Number_of_variants_before_filter, 3120
 Number_of_not_variants , 0
 Number_of_variants_processed , 3120
 Number_of_known_variants (i.e. non-empty ID) , 3120, 100% 
-Number_of_effects , 38871 
+Number_of_effects , 38864 
 Genome_total_length ,143726002 
 Genome_effective_length ,23513712 
 Change_rate , 7536 
@@ -30,10 +30,10 @@ SNP , 3120 , 100%
 # Effects by impact
 
 Type , Count , Percent 
-HIGH , 19 , 0.04888% 
-LOW , 1262 , 3.246636% 
-MODERATE , 1218 , 3.133441% 
-MODIFIER , 36372 , 93.571043% 
+HIGH , 19 , 0.048888% 
+LOW , 1262 , 3.247221% 
+MODERATE , 1218 , 3.134006% 
+MODIFIER , 36365 , 93.569885% 
 
 # Effects by functional class
 
@@ -46,36 +46,36 @@ Missense_Silent_ratio, 1.1329
 # Count by effects
 
 Type , Count , Percent 
-CUSTOM , 216 , 0.553818% 
-DOWNSTREAM , 11756 , 30.142044% 
-EXON , 444 , 1.138403% 
-INTERGENIC , 531 , 1.361469% 
-INTRON , 11221 , 28.770319% 
-NON_SYNONYMOUS_CODING , 1218 , 3.122917% 
-SPLICE_SITE_ACCEPTOR , 16 , 0.041024% 
-SPLICE_SITE_DONOR , 2 , 0.005128% 
-SPLICE_SITE_REGION , 116 , 0.297421% 
-START_GAINED , 83 , 0.21281% 
+CUSTOM , 209 , 0.535966% 
+DOWNSTREAM , 11756 , 30.147455% 
+EXON , 444 , 1.138608% 
+INTERGENIC , 531 , 1.361713% 
+INTRON , 11221 , 28.775484% 
+NON_SYNONYMOUS_CODING , 1218 , 3.123477% 
+SPLICE_SITE_ACCEPTOR , 16 , 0.041031% 
+SPLICE_SITE_DONOR , 2 , 0.005129% 
+SPLICE_SITE_REGION , 116 , 0.297474% 
+START_GAINED , 83 , 0.212848% 
 START_LOST , 1 , 0.002564% 
-SYNONYMOUS_CODING , 1076 , 2.758833% 
-UPSTREAM , 10725 , 27.49859% 
-UTR_3_PRIME , 1110 , 2.846008% 
-UTR_5_PRIME , 487 , 1.248654% 
+SYNONYMOUS_CODING , 1076 , 2.759328% 
+UPSTREAM , 10725 , 27.503526% 
+UTR_3_PRIME , 1110 , 2.846519% 
+UTR_5_PRIME , 487 , 1.248878% 
 
 # Count by genomic region
 
 Type , Count , Percent 
-CHROMOSOME , 216 , 0.555684% 
-DOWNSTREAM , 11756 , 30.243626% 
-EXON , 2729 , 7.020658% 
-INTERGENIC , 531 , 1.366057% 
-INTRON , 11105 , 28.568856% 
-SPLICE_SITE_ACCEPTOR , 16 , 0.041162% 
-SPLICE_SITE_DONOR , 2 , 0.005145% 
-SPLICE_SITE_REGION , 111 , 0.28556% 
-UPSTREAM , 10725 , 27.591263% 
-UTR_3_PRIME , 1110 , 2.855599% 
-UTR_5_PRIME , 570 , 1.466389% 
+CHROMOSOME , 209 , 0.537773% 
+DOWNSTREAM , 11756 , 30.249074% 
+EXON , 2729 , 7.021923% 
+INTERGENIC , 531 , 1.366303% 
+INTRON , 11105 , 28.574002% 
+SPLICE_SITE_ACCEPTOR , 16 , 0.041169% 
+SPLICE_SITE_DONOR , 2 , 0.005146% 
+SPLICE_SITE_REGION , 111 , 0.285611% 
+UPSTREAM , 10725 , 27.596233% 
+UTR_3_PRIME , 1110 , 2.856114% 
+UTR_5_PRIME , 570 , 1.466653% 
 
 # Quality 
 

@@ -1,9 +1,9 @@
 """
-This program will take a .BED file containing introns 
-(downloaded from UCSC for example) it will filter out long 
-introns retaining only introns shorter by the value defined in 
-the short_intron_size parameter. This program also allows to 
-trimm both end of the intron by the value defined in the 
+This program will take a .BED file containing introns
+(downloaded from UCSC for example) it will filter out long
+introns retaining only introns shorter by the value defined in
+the short_intron_size parameter. This program also allows to
+trimm both end of the intron by the value defined in the
 trailling_size parameter.
 
 This is a CLI of create_sfss/snp_utils.py filter_short_intron_from_bed().
@@ -50,7 +50,8 @@ def get_short_introns_from_bed(
                 if eend - estart < short_intron_size:
                     estart_trimmed = estart + trailling_size
                     eend_trimmed = eend - trailling_size
-                    short_intron = [chrom, (estart_trimmed-1), eend_trimmed]
+                    # short_intron = [chrom, (estart_trimmed-1), eend_trimmed]
+                    short_intron = [chrom, (estart_trimmed), eend_trimmed]
                     short_intron.extend(_)
                     outbed.write('\t'.join(str(item) for item in short_intron) + "\n")
                     short_introns.append(short_intron)
