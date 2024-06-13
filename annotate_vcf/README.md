@@ -75,6 +75,8 @@ options:
 - `get_reversed_complementary_strand()` also doesn't know how to deal with tri-allelics.
 
 ### ToDo's:
+- fix bug in simplify_snp.py line 128 `if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles")`. It should be something like: `if any(annotation in ('ReverseComplementedAlleles', 'SwappedAlleles') 
+for annotation in annotations):`(low) 
 - Implement annotation based on sift scores for synonymous sites (low);
 - Should be able to specify the sift score threshold for deleterious/tolereted mutations (low);
 - Right now sift4g command threshould is hard-coded in the pipeline: results should be the same for nonsynonymous mutations
