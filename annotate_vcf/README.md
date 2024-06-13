@@ -75,6 +75,10 @@ options:
 - `get_reversed_complementary_strand()` also doesn't know how to deal with tri-allelics.
 
 ### ToDo's:
+- LOF-like mutations are not having their codon change in the final table. Codon are only being taken from SNPEff synonymous and nonsynonymous annotations. Fix it to include for 
+all relevant effect including LOF (high).
+- To include SNPEff LOF and NMD annotations, should fix `simplify_snpeff.py` since it is discarding this by taking the first term only. `vcf_to_tsv.py` should have changes to 
+incorporate these information (low).
 - fix bug in simplify_snp.py line 128 `if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles")`. It should be something like: `if any(annotation in ('ReverseComplementedAlleles', 'SwappedAlleles') 
 for annotation in annotations):`(low) 
 - Implement annotation based on sift scores for synonymous sites (low);
