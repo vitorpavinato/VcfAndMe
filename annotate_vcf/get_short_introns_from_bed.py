@@ -50,7 +50,6 @@ def get_short_introns_from_bed(
                 if eend - estart < short_intron_size:
                     estart_trimmed = estart + trailling_size
                     eend_trimmed = eend - trailling_size
-                    # short_intron = [chrom, (estart_trimmed-1), eend_trimmed]
                     short_intron = [chrom, (estart_trimmed), eend_trimmed]
                     short_intron.extend(_)
                     outbed.write('\t'.join(str(item) for item in short_intron) + "\n")
