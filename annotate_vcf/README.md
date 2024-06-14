@@ -71,16 +71,25 @@ options:
 
 ### Issues:
 - `simplify_snpeff.py` only takes the first term from SNPEff annotation. For bi-allelic SNPs, the first term should be the important one (with the annotation of the most impacted change); but for tri-allelic there are the issue with the most important annotation per allele, and which allele is the most (or least) common one. Right now, the script picks the first term, regardless of all these issues for tri-allelic(s). ADVICE: remove tri-allelics before running this pipeline.
-- `vcf_to_tsv.py` also had to deal with tri-allelic SNPs in SIFT4g annotations. I did a quick fix to baypass it. It basica disregard the second annotated term, basically discarding the functional annotation of the second alternative allele. Because of it, the logic would be to remove tri-allelic SNPs.
-- `get_reversed_complementary_strand()` also doesn't know how to deal with tri-allelics.
+- `vcf_to_tsv.py` also had to deal with tri-allelic SNPs in SIFT4g annotations. I did a quick fix to baypass it. It basically disregard the second annotated term, discarding the functional annotation of the second alternative allele. Because of it, the logic would be to remove tri-allelic SNPs.
+- `get_reversed_complementary_strand()` also doesn't know how to deal with tri-allelics, so keep only biallelic SNPs.
 
 ### ToDo's:
+- `simplify_snpeff.py` (high):
+    - this needs to accuratelly recognize the INFO field items: Fix bug in simplify_snp.py line 128 `if     snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles")`. It should be something like: `if any(annotation in ('ReverseComplementedAlleles', 'SwappedAlleles') 
+    for annotation in annotations):`(low);
+    - To include SNPEff LOF and NMD annotations, should fix `simplify_snpeff.py` since it is discarding this by taking the first term only. `vcf_to_tsv.py` should have changes to 
+    incorporate these information (low).
+- `implementation.py`(high):
+    - Process LOF and NMD independently from EFF;
+- `process_vcf_func.py`(high):
+    - Either include LOF and NMD in EFF function or process them independently;
+    - Make the conditional in `process_info()` accurate.
+- `vcf_to_tsv_func.py`(high):
+    - `check_input_file()` needs some revision: make it like extra_annotation:utils:check_input_file();
+
 - LOF-like mutations are not having their codon change in the final table. Codon are only being taken from SNPEff synonymous and nonsynonymous annotations. Fix it to include for 
-all relevant effect including LOF (high).
-- To include SNPEff LOF and NMD annotations, should fix `simplify_snpeff.py` since it is discarding this by taking the first term only. `vcf_to_tsv.py` should have changes to 
-incorporate these information (low).
-- fix bug in simplify_snp.py line 128 `if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles")`. It should be something like: `if any(annotation in ('ReverseComplementedAlleles', 'SwappedAlleles') 
-for annotation in annotations):`(low) 
+all relevant effect: `SILENT`, `NONSENSE` and `MISSENSE` (high).
 - Implement annotation based on sift scores for synonymous sites (low);
 - Should be able to specify the sift score threshold for deleterious/tolereted mutations (low);
 - Right now sift4g command threshould is hard-coded in the pipeline: results should be the same for nonsynonymous mutations

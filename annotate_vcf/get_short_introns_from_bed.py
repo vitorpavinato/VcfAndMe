@@ -6,6 +6,9 @@ the short_intron_size parameter. This program also allows to
 trimm both end of the intron by the value defined in the
 trailling_size parameter.
 
+This is script is here as an example on how to create a custom BED file
+to use as a custom SNPEff annotation.
+
 This is a CLI of create_sfss/snp_utils.py filter_short_intron_from_bed().
 Here it was renamed to get_short_introns_from_bed()
 """
