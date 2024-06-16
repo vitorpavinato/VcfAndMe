@@ -45,7 +45,6 @@ def parser_and_checker(file: str, outfile: str = None) -> bool:
 
     # Check if the input file has the right INFO fields format
     with open(inputfile, "r", encoding="utf-8") as input_file:
-        first_line = None
         for line in input_file:
             if not line.startswith("##") and not line.startswith("#"):
                 first_line = line
