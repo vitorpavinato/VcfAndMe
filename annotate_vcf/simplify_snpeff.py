@@ -9,6 +9,7 @@ in selecting annotated terms.
 import os
 import argparse
 import sys
+import re
 
 
 # Function to check if a file exists
@@ -16,9 +17,10 @@ def parser_and_checker(file: str, outfile: str = None) -> bool:
     """
     Simple function to check:
     - if the input file was provided by the user and if it exists;
-    - if the input file has the right INFO fields format.
-    - if the input file has at least 4 elements in the INFO field
-    related variables.
+    - if the input file has something other than the header; 
+    - if the input file has at least 4 elements in the INFO fields;
+    - the 4 elements in the INFO field should be::
+        - AA, AC, AF, and EFF
     """
 
     # Check if input files are provided
@@ -38,6 +40,9 @@ def parser_and_checker(file: str, outfile: str = None) -> bool:
     # Define input and output files
     inputfile = file
 
+    # Process the first input line
+    first_line = None
+
     # Check if the input file has the right INFO fields format
     with open(inputfile, "r", encoding="utf-8") as input_file:
         first_line = None
@@ -51,22 +56,19 @@ def parser_and_checker(file: str, outfile: str = None) -> bool:
         # Check the INFO fields
         info_field = fields[7].split(';')
 
-        # Check if the INFO fields have at least 4 elements or if it is not empty:
-        # INFO field should have: AA, AC, AF and EFF.
-        if len(info_field) < 4 or fields[7] == "":
-            raise ValueError("Input file has missing elements in INFO field. Was the vcf annotated with SNPEff?")
+        # Check if the INFO fields:
+        # Should have at least 4 elements in the list: AC, AF, AA, EFF
+        if len(info_field) >= 4:
+            if not (any(re.search(r'AA=.*', element) for element in info_field) and
+                    any(re.search(r'AC=.*', element) for element in info_field) and
+                    any(re.search(r'AF=.*', element) for element in info_field) and
+                    any(re.search(r'EFF=.*', element) for element in info_field)):
+                raise ValueError("Input is not supported by this script! It should have at least AA, AC, AF,and EFF")
 
-        # Handle the case when the file is not empty
-        # and has at least 3 elements in INFO field
-        # Split the elements in info_field_list
-        first = info_field[0].split('=')[0]
-        second = info_field[1].split('=')[0]
-        third = info_field[2].split('=')[0]
-        fourth = info_field[3].split('=')[0]
-
-        # DONT NEED THIS ANYMORE
-        if (first != "AA") and (second != "AC") and (third != "AF") and (fourth != "EFF"):
-            raise ValueError("Input is not supported by this script!")
+        else:
+            # Handle the case when the INFO field has not enough elements
+            raise ValueError(
+                "Input file has not enough information in the INFO field...")
 
     else:
         # Handle the case when the file is empty
@@ -107,7 +109,7 @@ def simplify_snpeff_default(file: str, outfile: str = None,
                 output_file.write(line)
 
     # Open the input file in read mode and output file in write mode
-    with open(inputfile, "r") as input_file, open(outputfile, "a") as output_file:
+    with open(inputfile, "r", encoding="utf-8") as input_file, open(outputfile, "a", encoding="utf-8") as output_file:
         # For each line, breakdow the SNPEff info field to retain only the effect entries
         # Iterate through the lines in the input file
         for line in input_file:
@@ -121,30 +123,62 @@ def simplify_snpeff_default(file: str, outfile: str = None,
             info_field = fields[7]
 
             # Split the EFF field by commas to separete the SNPEff annotation
-            aa, ac, af, snpeffs, *lo = info_field.split(';')
+            aa, ac, af, *annotations = info_field.split(';')
 
-            # Check if any ReverseComplementedAlleles or SwappedAlleles is present
-            # in any SNPEff annotation entry and deal with it
-            if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles"):
-                _, snpeffann, = lo[0].split("EFF=")
+            # Start re-assembling INFO field
+            fields[7] = f"{aa};{ac};{af}"
 
-                # Update ID field with ReverseComplementedAlleles
-                # or SwappedAlleles as needed
-                fields[2] = fields[2] + "+" + snpeffs
+            # Iterate over the annotations list and check for patterns
+            # This handle expected elements in annotation more explicitly
+            if len(annotations) != 0:
+                for annotation in annotations:
+                    if re.search(r'EFF=.*', annotation):
+                        # Separate the annotation for EFF
+                        _, effentries = annotation.split("EFF=")
 
-            else:
-                _, snpeffann, = snpeffs.split("EFF=")
+                        # Take the first EFF effect
+                        effentry = effentries.split(',')[0]
 
-            # Separete each SNPEff entry
-            snpeffann_entries = snpeffann.split(',')
+                        # Add the simplified EFF field to the INFO field
+                        fields[7] = f"{fields[7]};EFF={effentry}"
+
+                    elif re.search(r'LOF', annotation):
+                        # Separate the annotation for LOF
+                        _, lofentries = annotation.split("LOF=")
+
+                        # Take the first LOF effect
+                        # Consistent with EFF effect above
+                        lofentry = lofentries.split(',')[0]
+
+                        # Add the simplified LOF field to the INFO field
+                        fields[7] = f"{fields[7]};LOF={lofentry}"
+
+                    elif re.search(r'NMD', annotation):
+                        # Separate the annotation for NMD
+                        _, nmdentries = annotation.split("NMD=")
+
+                        # Take the first NMD effect
+                        # Consistent with EFF effect above
+                        nmdentry = nmdentries.split(',')[0]
+
+                        # Add the simplified NMD field to the INFO field
+                        fields[7] = f"{fields[7]};NMD={nmdentry}"
+
+                    elif re.search(r'ReverseComplementedAlleles', annotation):
+                        # Take any of the ReverseComplementedAlleles and
+                        # add it to the vcf ID fields
+                        fields[2] = fields[2] + "+" + annotation
+                        # pass
+
+                    elif re.search(r'SwappedAlleles', annotation):
+                        # Take any of the ReverseComplementedAlleles and
+                        # add it to the vcf ID fields
+                        fields[2] = fields[2] + "+" + annotation
+                        # pass
 
             # It only takes the first entry
             # Get the effect to use latter in keeping only relevant terms
-            effect, _ = snpeffann_entries[0].split('(')
-
-            # Re-assemble the EFF field with the simplified version
-            # of the SNPEff annottion.
-            fields[7] = f"{aa};{ac};{af};EFF={snpeffann_entries[0]}"
+            effect, _ = effentry.split('(')
 
             # Re-assemble the entire line
             reassembled_line = '\t'.join(fields)
@@ -190,7 +224,7 @@ def simplify_snpeff_with_custom_annotation(
                 output_file.write(line)
 
     # Open the input file in read mode and output file in write mode
-    with open(inputfile, "r") as input_file, open(outputfile, "a") as output_file:
+    with open(inputfile, "r", encoding="utf-8") as input_file, open(outputfile, "a", encoding="utf-8") as output_file:
         # For each line, breakdow the SNPEff info field to retain only the effect entries
         # Iterate through the lines in the input file
         for line in input_file:
@@ -204,36 +238,70 @@ def simplify_snpeff_with_custom_annotation(
             info_field = fields[7]
 
             # Split the EFF field by commas to separete the SNPEff annotation
-            aa, ac, af, snpeffs, *lo = info_field.split(';')
+            aa, ac, af, *annotations = info_field.split(';')
 
-            # Check if any ReverseComplementedAlleles or SwappedAlleles is present
-            # in any SNPEff annotation entry and deal with it
-            if snpeffs in ("ReverseComplementedAlleles", "SwappedAlleles"):
-                _, snpeffann, = lo[0].split("EFF=")
+            # Start re-assembling INFO field
+            fields[7] = f"{aa};{ac};{af}"
 
-                # Update ID field with ReverseComplementedAlleles
-                # or SwappedAlleles as needed
-                fields[2] = fields[2] + "+" + snpeffs
+            # Iterate over the annotations list and check for patterns
+            # This handle expected elements in annotation more explicitly
+            if len(annotations) != 0:
+                for annotation in annotations:
+                    if re.search(r'EFF=.*', annotation):
+                        # Separate the annotation for EFF
+                        _, effentries = annotation.split("EFF=")
 
-            else:
-                _, snpeffann, = snpeffs.split("EFF=")
+                        # Split the EFF entries by commas
+                        effentries = effentries.split(',')
 
-            # Separete each SNPEff entry
-            snpeffann_entries = snpeffann.split(',')
+                        # Take the first EFF effect to simplify it
+                        fields[7] = f"{fields[7]};EFF={effentries[0]}"
+
+                    elif re.search(r'LOF', annotation):
+                        # Separate the annotation for LOF
+                        _, lofentries = annotation.split("LOF=")
+
+                        # Take the first LOF effect
+                        # Consistent with EFF effect above
+                        lofentry = lofentries.split(',')[0]
+
+                        # Add the simplified LOF field to the INFO field
+                        fields[7] = f"{fields[7]};LOF={lofentry}"
+
+                    elif re.search(r'NMD', annotation):
+                        # Separate the annotation for NMD
+                        _, nmdentries = annotation.split("NMD=")
+
+                        # Take the first NMD effect
+                        # Consistent with EFF effect above
+                        nmdentry = nmdentries.split(',')[0]
+
+                        # Add the simplified NMD field to the INFO field
+                        fields[7] = f"{fields[7]};NMD={nmdentry}"
+
+                    elif re.search(r'ReverseComplementedAlleles', annotation):
+                        # Take any of the ReverseComplementedAlleles and
+                        # add it to the vcf ID fields
+                        fields[2] = fields[2] + "+" + annotation
+                        # pass
+
+                    elif re.search(r'SwappedAlleles', annotation):
+                        # Take any of the ReverseComplementedAlleles and
+                        # add it to the vcf ID fields
+                        fields[2] = fields[2] + "+" + annotation
+                        # pass
 
             # It only takes the first entry
             # Get the effect to use latter in keeping only relevant terms
-            effect, _ = snpeffann_entries[0].split('(')
+            effect, _ = effentries[0].split('(')
 
             # Take SNPEff first entry and one CUSTOM if present
-            custom_entries = [entry for entry in snpeffann_entries if entry.startswith(f"CUSTOM[{custom_annotation}]")]
+            custom_entries = [entry for entry in effentries if entry.startswith(f"CUSTOM[{custom_annotation}]")]
 
-            # Re-assemble the EFF field with the simplified version
-            # of the SNPEff annottion.
-            if (custom_entries == []):
-                fields[7] = f"{aa};{ac};{af};EFF={snpeffann_entries[0]}"
-            else:
-                fields[7] = f"{aa};{ac};{af};EFF={snpeffann_entries[0]},{custom_entries[0]}"
+            # Re-assemble the EFF with the CUSTOM field
+            if custom_entries != []:
+                # Add the simplified CUSTOM field to the INFO field
+                fields[7] = f"{fields[7]},{custom_entries[0]}"
 
             # Re-assemble the entire line
             reassembled_line = '\t'.join(fields)
@@ -248,7 +316,7 @@ def simplify_snpeff_with_custom_annotation(
 
 
 def parseargs():
-    parser = argparse.ArgumentParser("python simplify_snpeff.py", 
+    parser = argparse.ArgumentParser("python simplify_snpeff.py",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-i", help="The the name of the file which the data are to be read from (annotated vcf from SNPEff)",
                         dest="file", required=True, type=str)
@@ -330,4 +398,3 @@ if __name__ == "__main__":
 # if len(valid_items) > 0:
 # #print(line)
 # filtered_vcf_lines.append(line)
-
