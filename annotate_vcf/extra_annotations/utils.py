@@ -15,7 +15,7 @@ def check_input_file(inputfile: str) -> str:
     - if the input file was provided by the user and if it exists;
     - if the input file has something other than the header; 
     - if the input file has at least 3 elements in the INFO fields;
-    - the 2 elements in the INFO field should be::
+    - the 3 elements in the INFO field should be::
         - AA, AC, and AF
     """
 
@@ -43,7 +43,7 @@ def check_input_file(inputfile: str) -> str:
         info_field = fields[7].split(';')
 
         # Check if the INFO fields:
-        # Should have at least 2 elements in the list: AC, AF
+        # Should have at least 3 elements in the list: AA, AC and AF
         if len(info_field) >= 3:
             if not (any(re.search(r'AA=.*', element) for element in info_field) and
                     any(re.search(r'AC=.*', element) for element in info_field) and
@@ -51,7 +51,7 @@ def check_input_file(inputfile: str) -> str:
                 raise ValueError("Input is not supported by this script! It should have at least AA, AC and AF")
 
         else:
-            # Handle the case when the file is empty
+            # Handle the case when the INFO field has not enough elements
             raise ValueError("Input file has not enough information in the INFO field...")
 
     else:
