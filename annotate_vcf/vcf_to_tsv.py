@@ -14,7 +14,7 @@ def vcf_to_tsv(
     inputfile: str, outputfile: str,
     reference: str, samtools_path: str, nflankinbps: int,
     custom_effect_name: str = None, new_custom_effect_name: str = None,
-    sift4g_annotations: bool = False
+    sift4g_annotations: bool = False, deleteriousness_threshold: float = 0.05
 ) -> None:
     """vcf_to_tsv.py railroad pattern implementation.
     This function takes a vcf file and converts it to a .tsv table.
@@ -29,6 +29,7 @@ def vcf_to_tsv(
         custom_effect_name (str, optional): Custom effect name. Defaults to None.
         new_custom_effect_name (str, optional): New custom effect name. Defaults to None.
         sift4g_annotations (bool, optional): Input vcf with SIFT4G annotations. Defaults to False.
+        deleteriousness_threshold (float, optional): Deleteriousness threshold. Defaults to 0.05.
     """
 
     # Input file check
@@ -52,7 +53,8 @@ def vcf_to_tsv(
             inputfile=inputfile, reference=reference,
             samtools=samtools, nflankinbps=nflankinbps,
             custom_effect_name=custom_effect_name,
-            new_custom_effect_name=new_custom_effect_name
+            new_custom_effect_name=new_custom_effect_name,
+            deleteriousness_threshold=deleteriousness_threshold
         )
         header = snpeff_sift4g_header()
 
@@ -92,7 +94,8 @@ def parseargs():
     parser.add_argument("-f", help="Number of bases flanking each targeted SNP", dest="nflankinbps", default=3, type=int)
     parser.add_argument("-c", help="Custom effect name", dest="custom_effect_name", default=None, type=str)
     parser.add_argument("-n", help="New custom effect name", dest="new_custom_effect_name", default=None, type=str)
-    parser.add_argument("-e", help="Input vcf with SIFT4G annotations", dest="sift4g_annotations", default=False, action="store_true")
+    parser.add_argument("-e", help="Input vcf with SIFT4G annotations", dest="sift4g_annotations", default=False, action="store_true", required=lambda x: x.deleteriousness_threshold is not None)
+    parser.add_argument("-d", help="Deleteriousness threshold for SIFT4G annotations", dest="deleteriousness_threshold", default=0.05, type=float)
     return parser
 
 
@@ -115,13 +118,15 @@ def main(argv) -> None:
     custom_effect_name = args.custom_effect_name
     new_custom_effect_name = args.new_custom_effect_name
     sift4g_annotations = args.sift4g_annotations
+    deleteriousness_threshold = args.deleteriousness_threshold
 
     # Execute the function
     result = vcf_to_tsv(inputfile=inputfile, outputfile=outputfile,
                         reference=reference, samtools_path=samtools_path,
                         nflankinbps=nflankinbps, custom_effect_name=custom_effect_name,
                         new_custom_effect_name=new_custom_effect_name,
-                        sift4g_annotations=sift4g_annotations)
+                        sift4g_annotations=sift4g_annotations,
+                        deleteriousness_threshold=deleteriousness_threshold)
 
     print(result)
 

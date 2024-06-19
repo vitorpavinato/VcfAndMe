@@ -18,7 +18,7 @@ def check_input_file(inputfile: str) -> str:
     """
     Simple function to check:
     - if the input file was provided by the user and if it exists;
-    - if the input file has something other than the header; 
+    - if the input file has something other than the header;
     - if the input file has at least 4 elements in the INFO fields;
     - the 4 elements in the INFO field should be::
         - AA, AC, AF, and EFF

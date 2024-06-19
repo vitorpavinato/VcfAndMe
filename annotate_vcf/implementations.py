@@ -11,7 +11,8 @@ from mutational_context_func import get_mutational_context
 def processes_snpeff_sift4g_vcf(
     inputfile: str,
     reference: str, samtools: str, nflankinbps: int,
-    custom_effect_name: str = None, new_custom_effect_name: str = None
+    custom_effect_name: str = None, new_custom_effect_name: str = None,
+    deleteriousness_threshold: float = 0.05
 ) -> Tuple[list, list, list]:
     """
     Railroad pattern #1: The vcf includes annotations from SNPEff and SIFT4G
@@ -47,7 +48,7 @@ def processes_snpeff_sift4g_vcf(
             snp_fields_list, pos_int, info, genotypes = process_fields(fields=fields)
 
             # Unpack vcf INFO items
-            info_subitems_list, snpeff_, sift_ = process_info(info=info, sift4g_annotation=True)
+            info_subitems_list, snpeff_, lof_, nmd_, sift_ = process_info(info=info, sift4g_annotation=True)
 
             # Count genotypes
             genotype_count_list = count_genotypes(genotypes)
@@ -70,8 +71,14 @@ def processes_snpeff_sift4g_vcf(
                 new_custom_effect_name=new_custom_effect_name
             )
 
+            # Unpack snpeff::lof INFO items
+            lof_list = get_lof_items(lof=lof_)
+
+            # Unpack snpeff::nmd INFO items
+            nmd_list = get_nmd_items(nmd=nmd_)
+
             # Unpack SIFT4G INFO items
-            sift4g_list = get_sift4g_items(sift_, threshold=0.05)
+            sift4g_list = get_sift4g_items(sift_, threshold=deleteriousness_threshold)
 
             # This part is for fixing basis in flaking bases string
             # if SNPs are close (less than nflankinbps)
@@ -99,7 +106,7 @@ def processes_snpeff_sift4g_vcf(
             previous_position = current_position
 
             # Create a re-usable list to store the needed information
-            line_list = snp_fields_list + info_subitems_list + genotype_count_list + mutational_context_list + snpeff_list + sift4g_list
+            line_list = snp_fields_list + info_subitems_list + genotype_count_list + mutational_context_list + snpeff_list + lof_list + nmd_list + sift4g_list
 
             # Add the line to the list of lines
             vcf_lines.append(line_list)
@@ -148,7 +155,7 @@ def processes_snpeff_vcf(
             snp_fields_list, pos_int, info, genotypes = process_fields(fields=fields)
 
             # Unpack vcf INFO items
-            info_subitems_list, snpeff_ = process_info(info=info, sift4g_annotation=False)
+            info_subitems_list, snpeff_ , lof_, nmd_ = process_info(info=info, sift4g_annotation=False)
 
             # Count genotypes
             genotype_count_list = count_genotypes(genotypes)
@@ -170,6 +177,12 @@ def processes_snpeff_vcf(
                 custom_effect_name=custom_effect_name,
                 new_custom_effect_name=new_custom_effect_name
             )
+
+            # Unpack snpeff::lof INFO items
+            lof_list = get_lof_items(lof=lof_)
+
+            # Unpack snpeff::nmd INFO items
+            nmd_list = get_nmd_items(nmd=nmd_)
 
             # This part is for fixing basis in flaking bases string
             # if SNPs are close (less than nflankinbps)
@@ -197,7 +210,7 @@ def processes_snpeff_vcf(
             previous_position = current_position
 
             # Create a re-usable list to store the needed information
-            line_list = snp_fields_list + info_subitems_list + genotype_count_list + mutational_context_list + snpeff_list
+            line_list = snp_fields_list + info_subitems_list + genotype_count_list + mutational_context_list + snpeff_list + lof_list + nmd_list
 
             # Add the line to the list of lines
             vcf_lines.append(line_list)
@@ -216,6 +229,8 @@ def snpeff_sift4g_header() -> str:
         "refcontext_complrev", "altcontext_complrev",
         "refcodon", "altcodon", "maineffect", "snpeff_effimpact", "snpeff_funclass",
         "snpeff_genename", "snpeff_trnscbiotype", "snpeff_genecoding", "snpeff_trnscid",
+        "lof_genename", "lof_geneid", "lof_ntranscripts", "lof_perc_afftranscripts",
+        "nmd_genename", "nmd_geneid", "nmd_ntranscripts", "nmd_perc_afftranscripts",
         "refaa", "altaa", "sift_trnscid", "sift_geneid", "sift_genename", "sift_region",
         "sift_vartype", "sifts_core", "sift_median", "sift_pred", "deleteriousness"
     ]
@@ -233,7 +248,9 @@ def snpeff_header() -> str:
         "refcount", "altcount", "totalcount", "refcontext", "altcontext",
         "refcontext_complrev", "altcontext_complrev",
         "refcodon", "altcodon", "maineffect", "snpeff_effimpact", "snpeff_funclass",
-        "snpeff_genename", "snpeff_trnscbiotype", "snpeff_genecoding", "snpeff_trnscid"
+        "snpeff_genename", "snpeff_trnscbiotype", "snpeff_genecoding", "snpeff_trnscid",
+        "lof_genename", "lof_geneid", "lof_ntranscripts", "lof_perc_afftranscripts",
+        "nmd_genename", "nmd_geneid", "nmd_ntranscripts", "nmd_perc_afftranscripts",
     ]
     header = "\t".join(str(item) for item in header)
 
