@@ -106,7 +106,7 @@ def simplify_snpeff_default(file: str, outfile: str = None,
         for line in input_file:
             if (line.startswith("##") or line.startswith("#")):
                 output_file.write(line)
-
+    
     # Open the input file in read mode and output file in write mode
     with open(inputfile, "r", encoding="utf-8") as input_file, open(outputfile, "a", encoding="utf-8") as output_file:
         # For each line, breakdow the SNPEff info field to retain only the effect entries
@@ -131,6 +131,8 @@ def simplify_snpeff_default(file: str, outfile: str = None,
             # This handle expected elements in annotation more explicitly
             if len(annotations) != 0:
                 for annotation in annotations:
+                    
+                    # EFF, LOF, and MND of SNPEff
                     if re.search(r'EFF=.*', annotation):
                         # Separate the annotation for EFF
                         _, effentries = annotation.split("EFF=")
@@ -163,6 +165,7 @@ def simplify_snpeff_default(file: str, outfile: str = None,
                         # Add the simplified NMD field to the INFO field
                         fields[7] = f"{fields[7]};NMD={nmdentry}"
 
+                    # ReverseComplementedAlleles and SwappedAlleles of liftOver
                     elif re.search(r'ReverseComplementedAlleles', annotation):
                         # Take any of the ReverseComplementedAlleles and
                         # add it to the vcf ID fields
@@ -246,6 +249,8 @@ def simplify_snpeff_with_custom_annotation(
             # This handle expected elements in annotation more explicitly
             if len(annotations) != 0:
                 for annotation in annotations:
+                    
+                    # EFF, LOF, and MND of SNPEff
                     if re.search(r'EFF=.*', annotation):
                         # Separate the annotation for EFF
                         _, effentries = annotation.split("EFF=")
@@ -255,6 +260,14 @@ def simplify_snpeff_with_custom_annotation(
 
                         # Take the first EFF effect to simplify it
                         fields[7] = f"{fields[7]};EFF={effentries[0]}"
+
+                        # Take SNPEff first entry and one CUSTOM if present
+                        custom_entries = [entry for entry in effentries if entry.startswith(f"CUSTOM[{custom_annotation}]")]
+
+                        # Re-assemble the EFF with the CUSTOM field
+                        if custom_entries != []:
+                            # Add the simplified CUSTOM field to the INFO field
+                            fields[7] = f"{fields[7]},{custom_entries[0]}"
 
                     elif re.search(r'LOF', annotation):
                         # Separate the annotation for LOF
@@ -278,6 +291,7 @@ def simplify_snpeff_with_custom_annotation(
                         # Add the simplified NMD field to the INFO field
                         fields[7] = f"{fields[7]};NMD={nmdentry}"
 
+                    # ReverseComplementedAlleles and SwappedAlleles of liftOver
                     elif re.search(r'ReverseComplementedAlleles', annotation):
                         # Take any of the ReverseComplementedAlleles and
                         # add it to the vcf ID fields
@@ -293,14 +307,6 @@ def simplify_snpeff_with_custom_annotation(
             # It only takes the first entry
             # Get the effect to use latter in keeping only relevant terms
             effect, _ = effentries[0].split('(')
-
-            # Take SNPEff first entry and one CUSTOM if present
-            custom_entries = [entry for entry in effentries if entry.startswith(f"CUSTOM[{custom_annotation}]")]
-
-            # Re-assemble the EFF with the CUSTOM field
-            if custom_entries != []:
-                # Add the simplified CUSTOM field to the INFO field
-                fields[7] = f"{fields[7]},{custom_entries[0]}"
 
             # Re-assemble the entire line
             reassembled_line = '\t'.join(fields)
