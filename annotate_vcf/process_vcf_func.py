@@ -6,7 +6,7 @@ They are used in the highler level functions for different
 instances of the implementations.py script.
 """
 
-
+import re
 from typing import Tuple, List
 
 
@@ -40,8 +40,9 @@ def process_info(
     """
     Unpack items in INFO
     """
+
     # Unpack items in INFO
-    aa_, ac_, af_, snpeff, *sift = info.strip().split(";")
+    aa_, ac_, af_, *annotations = info.strip().split(";")
 
     # Unpack subitems in INFO
     aa = aa_.split("=")[1]
@@ -51,10 +52,23 @@ def process_info(
     # Create info subitems list
     info_subitems_list = [aa, ac, af]
 
+    snpeff = lof = nmd = sift = "NA"
+
+    # Unpack items in annotations:
+    for annotation in annotations:
+        if re.search(r'EFF=.*', annotation):
+            snpeff = annotation
+        elif re.search(r'LOF=.*', annotation):
+            lof = annotation
+        elif re.search(r'NMD=.*', annotation):
+            nmd = annotation
+        elif re.search(r'SIFTINFO=.*', annotation):
+            sift = annotation
+
     if sift4g_annotation:
-        return info_subitems_list, snpeff, sift
+        return info_subitems_list, snpeff, lof, nmd, sift
     # else:
-    return info_subitems_list, snpeff
+    return info_subitems_list, snpeff, lof, nmd
 
 
 # Count the number of alternative and reference genotypes
@@ -134,9 +148,8 @@ def get_snpeff_items(
     if not bool(transcript_biotype.strip()):
         transcript_biotype = "NA"
 
-    # Unpack codons (for gatk format)
-    # if effect == "SYNONYMOUS_CODING" or effect == "NON_SYNONYMOUS_CODING":
-    if maineffect in ("SYNONYMOUS_CODING", "NON_SYNONYMOUS_CODING"):
+    # Unpack codons for functional classes
+    if functional_class in ("SILENT", "MISSENSE", "NONSENSE"):
         refcodon, altcodon = codon_change.strip().split("/")
 
     # Unpack custom effects
@@ -163,7 +176,7 @@ def get_snpeff_items(
 
 
 # Unpack items in info::sift (when present)
-def get_sift4g_items(sift4g: str, threshold: float = 0.05) -> List[str]:
+def get_sift4g_items(sift4g: str, sift_threshold: float = 0.05) -> List[str]:
     """
     Create variables with NA to store sift4g items and avoid errors.
     Unpack items in sift4g.
@@ -185,11 +198,10 @@ def get_sift4g_items(sift4g: str, threshold: float = 0.05) -> List[str]:
     ) = ("NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA")
 
     # Check if there is any SIFT4G info
-    if len(sift4g) > 0:
+    if sift4g != "NA":
 
         # Unpack items in info::eff
-        _, siftinfo = sift4g[0].strip().split("=")
-        siftinfo, *_ = siftinfo.strip().split(",")  # Bypass issue with tri-allelic SNPs
+        _, siftinfo = sift4g.strip().split("=")
 
         # ALL SIFT fields
         (
@@ -212,18 +224,87 @@ def get_sift4g_items(sift4g: str, threshold: float = 0.05) -> List[str]:
         refaa, altaa = aa.strip().split("/")
 
         # Define deleteriousness status
-        if varianttype == "NONSYNONYMOUS":
-            if siftscore == "NA":
-                deleteriousness = "NA"
+        if siftscore != "NA":
+            if float(siftscore) < sift_threshold:
+                deleteriousness = "custom_deleterious"
             else:
-                if float(siftscore) < threshold:
-                    deleteriousness = "deleterious"
-                else:
-                    deleteriousness = "tolerated"
-        elif varianttype == "SYNONYMOUS":
-            deleteriousness = "NA"
+                deleteriousness = "custom_tolerated"
 
     # Return only needed items for the pipeline
     sift4g_list = [refaa, altaa, transcript, geneid, genename, region, varianttype, siftscore, siftmedian, siftpred, deleteriousness]
 
     return sift4g_list
+
+
+# Unpack items in info::lof
+def get_lof_items(lof: str) -> List[str]:
+    """
+    Create variables with NA to store lof items and avoid errors.
+    Unpack items in lof.
+    Return only needed items for the pipeline
+    """
+
+    # lof expect elements
+    (
+        genename,
+        geneid,
+        numbe_of_transcripts,
+        perc_affected_transcripts
+    ) = ("NA", "NA", "NA", "NA")
+
+    # Check if there is any SIFT4G info
+    if lof != "NA":
+
+        # Unpack items in info::eff
+        _, lof_ = lof.strip().split("=(")
+        lof_, _ = lof_.strip().split(")")
+
+        # ALL SIFT fields
+        (
+            genename,
+            geneid,
+            numbe_of_transcripts,
+            perc_affected_transcripts
+        ) = lof_.strip().split("|")
+
+    # Return lof items
+    lof_list = [genename, geneid, numbe_of_transcripts, perc_affected_transcripts]
+
+    return lof_list
+
+
+# Unpack items in info::nmd
+def get_nmd_items(nmd: str) -> List[str]:
+    """
+    Create variables with NA to store lof items and avoid errors.
+    Unpack items in nmd.
+    Return only needed items for the pipeline
+    """
+
+    # lof expect elements
+    (
+        genename,
+        geneid,
+        numbe_of_transcripts,
+        perc_affected_transcripts
+    ) = ("NA", "NA", "NA", "NA")
+
+    # Check if there is any SIFT4G info
+    if nmd != "NA":
+
+        # Unpack items in info::eff
+        _, nmd_ = nmd.strip().split("=(")
+        nmd_, _ = nmd_.strip().split(")")
+
+        # ALL SIFT fields
+        (
+            genename,
+            geneid,
+            numbe_of_transcripts,
+            perc_affected_transcripts
+        ) = nmd_.strip().split("|")
+
+    # Return lof items
+    nmd_list = [genename, geneid, numbe_of_transcripts, perc_affected_transcripts]
+
+    return nmd_list

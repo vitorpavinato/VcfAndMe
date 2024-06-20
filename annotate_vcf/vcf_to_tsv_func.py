@@ -8,6 +8,7 @@ file paths, set output files names, etc.
 
 import os
 import subprocess
+import re
 from pathlib import Path
 from typing import List
 
@@ -17,9 +18,10 @@ def check_input_file(inputfile: str) -> str:
     """
     Simple function to check:
     - if the input file was provided by the user and if it exists;
-    - if the input file has something in the INFO fields;
-    - if the input file has at least 4 elements in the INFO field;
-    - The INFO field should have: AA, AC, AF and EFF.
+    - if the input file has something other than the header;
+    - if the input file has at least 4 elements in the INFO fields;
+    - the 4 elements in the INFO field should be::
+        - AA, AC, AF, and EFF
     """
 
     # Check if input files are provided
@@ -30,9 +32,11 @@ def check_input_file(inputfile: str) -> str:
     if not os.path.exists(inputfile):
         raise ValueError("file does not exist")
 
+    # Process the first input line
+    first_line = None
+
     # Check if the input file has the right INFO fields format
     with open(inputfile, "r", encoding="utf-8") as input_file:
-        first_line = None
         for line in input_file:
             if not line.startswith("##") and not line.startswith("#"):
                 first_line = line
@@ -43,22 +47,19 @@ def check_input_file(inputfile: str) -> str:
         # Check the INFO fields
         info_field = fields[7].split(';')
 
-        # Check if the INFO fields have at least 3 elements or if it is not empty:
-        # INFO field should have: AC, AF and EFF.
-        if len(info_field) < 4 or fields[7] == "":
-            raise ValueError("Input file has missing elements in INFO field. Was the vcf annotated with SNPEff?")
+        # Check if the INFO fields:
+        # Should have at least 4 elements in the list: AC, AF, AA, EFF
+        if len(info_field) >= 4:
+            if not (any(re.search(r'AA=.*', element) for element in info_field) and
+                    any(re.search(r'AC=.*', element) for element in info_field) and
+                    any(re.search(r'AF=.*', element) for element in info_field) and
+                    any(re.search(r'EFF=.*', element) for element in info_field)):
+                raise ValueError("Input is not supported by this script! It should have at least AA, AC, AF,and EFF")
 
-        # Handle the case when the file is not empty
-        # and has at least 3 elements in INFO field
-        # Split the elements in info_field_list
-        first = info_field[0].split('=')[0]
-        second = info_field[1].split('=')[0]
-        third = info_field[2].split('=')[0]
-        fourth = info_field[3].split('=')[0]
-
-        # DONT NEED THIS ANYMORE
-        if (first != "AA") and (second != "AC") and (third != "AF") and (fourth != "EFF"):
-            raise ValueError("Input is not supported by this script! It should have at least AA, AC, AF and EFF")
+        else:
+            # Handle the case when the INFO field has not enough elements
+            raise ValueError(
+                "Input file has not enough information in the INFO field...")
 
     else:
         # Handle the case when the file is empty
