@@ -12,7 +12,7 @@ def processes_snpeff_sift4g_vcf(
     inputfile: str,
     reference: str, samtools: str, nflankinbps: int,
     custom_effect_name: str = None, new_custom_effect_name: str = None,
-    deleteriousness_threshold: float = 0.05
+    sift_threshold: float = 0.05
 ) -> Tuple[list, list, list]:
     """
     Railroad pattern #1: The vcf includes annotations from SNPEff and SIFT4G
@@ -78,7 +78,7 @@ def processes_snpeff_sift4g_vcf(
             nmd_list = get_nmd_items(nmd=nmd_)
 
             # Unpack SIFT4G INFO items
-            sift4g_list = get_sift4g_items(sift_, threshold=deleteriousness_threshold)
+            sift4g_list = get_sift4g_items(sift_, sift_threshold=sift_threshold)
 
             # This part is for fixing basis in flaking bases string
             # if SNPs are close (less than nflankinbps)

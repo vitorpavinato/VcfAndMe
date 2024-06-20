@@ -176,7 +176,7 @@ def get_snpeff_items(
 
 
 # Unpack items in info::sift (when present)
-def get_sift4g_items(sift4g: str, threshold: float = 0.05) -> List[str]:
+def get_sift4g_items(sift4g: str, sift_threshold: float = 0.05) -> List[str]:
     """
     Create variables with NA to store sift4g items and avoid errors.
     Unpack items in sift4g.
@@ -225,10 +225,10 @@ def get_sift4g_items(sift4g: str, threshold: float = 0.05) -> List[str]:
 
         # Define deleteriousness status
         if siftscore != "NA":
-            if float(siftscore) < threshold:
-                deleteriousness = "deleterious"
+            if float(siftscore) < sift_threshold:
+                deleteriousness = "custom_deleterious"
             else:
-                deleteriousness = "tolerated"
+                deleteriousness = "custom_tolerated"
 
     # Return only needed items for the pipeline
     sift4g_list = [refaa, altaa, transcript, geneid, genename, region, varianttype, siftscore, siftmedian, siftpred, deleteriousness]
