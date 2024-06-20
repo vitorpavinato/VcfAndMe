@@ -81,23 +81,6 @@ def vcf_to_tsv(
     return "vcf to tsv processed"
 
 
-# Define the command line arguments
-# def parseargs():
-#     """
-#     Function defines command-line parsing arguments.
-#     """
-#     parser = argparse.ArgumentParser("python vcf_to_tsv.py", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-#     parser.add_argument("-i", help="Input vcf file name", dest="inputfile", required=True, type=str)
-#     parser.add_argument("-o", help="Output tsv file name", dest="outputfile", default=None, type=str)
-#     parser.add_argument("-r", help="Path to the reference genome of the vcf file", dest="reference", required=True, type=str)
-#     parser.add_argument("-s", help="Path to the samtools", dest="samtools_path", required=True, type=str)
-#     parser.add_argument("-f", help="Number of bases flanking each targeted SNP", dest="nflankinbps", default=3, type=int)
-#     parser.add_argument("-c", help="Custom effect name", dest="custom_effect_name", default=None, type=str)
-#     parser.add_argument("-n", help="New custom effect name", dest="new_custom_effect_name", default=None, type=str)
-#     parser.add_argument("-e", help="Input vcf with SIFT4G annotations", dest="sift4g_annotations", default=False, action="store_true", required=lambda x: x.deleteriousness_threshold is not None)
-#     parser.add_argument("-d", help="User defined version of sift threshold for SIFT4G annotations", dest="sift_threshold", default=0.05, type=float)
-#     return parser
-
 def parseargs():
     """
     Function defines command-line parsing arguments.
