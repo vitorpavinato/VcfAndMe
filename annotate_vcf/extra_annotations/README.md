@@ -19,3 +19,6 @@ options:
   -o OUTPUTFILE       Output tsv file name (default: None)
   -n ANNOTATION_NAME  New custom annotation name (default: None)
 ```
+
+### To do's:
+- Implement the custom annotation parsing of `snpeff-consistency.py` as it can handle better the SNPEff multiple annotations;
