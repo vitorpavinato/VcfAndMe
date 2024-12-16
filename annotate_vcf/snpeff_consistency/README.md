@@ -1,57 +1,141 @@
 # SNPEff Consistency
 
-A tool for analyzing multiple annotations from SNPEff output, providing both strict and majority-rule based approaches for effect classification.
+A tool for analyzing and consolidating multiple SNPEff annotations in VCF files.
 
 ## Overview
 
-SNPEff often assigns multiple annotations to a single SNP, especially in compact genomes with overlapping genomic elements. This tool provides flexible approaches to handle such multiple annotations:
+SNPEff often assigns multiple annotations to a single SNP, especially in compact genomes with overlapping genomic elements.
+SNPeff-consistency provides flexible approaches to handle multiple annotations that SNPEff assigns to a single SNP. It offers three analysis modes:
+1. **Strict consistency checking**: Ideal for sparse genomes (e.g., human) where SNPs often have single, clear effects
+2. **Rule-based analysis for position and feature-based effects**: Better suited for compact genomes (e.g., Drosophila) with frequent overlapping features
+3. **Specific effect type identification**: This looks SNPs containing any of these effects: `NON_SYNONYMOUS_CODING`, `SYNONYMOUS_CODING`, `INTRONS`, and `INTERGENIC` (in this order)
+4. **Custom Annotation Integration**: Currently supports short-intron annotations, with plans for expansion
 
-1. **Strict Effect Analysis**: Ideal for sparse genomes (e.g., human) where SNPs often have single, clear effects
-2. **Majority Rule Analysis**: Better suited for compact genomes (e.g., Drosophila) with frequent overlapping features
-3. **Custom Annotation Integration**: Currently supports short-intron annotations, with plans for expansion
+## Features
+
+- Multiple analysis modes for different use cases
+- Distance-based filtering for positional effects (*e.g.* `DOWNSTREAM`, `UPSTREAM`, etc)
+- Custom annotation handling (e.g., short introns)
+- Detailed statistics and logging
+- Conservative handling of functional annotations specially for specific type identification
+
+## Installation
+
+```bash
+git clone [repository-url]
+cd snpeff-consistency
+```
+
+## Dependencies
+- Python 3.x
+- No additional packages required
 
 ## Usage
 
+Basic usage:
 ```zsh
-python snpeff_consistency.py input.vcf -o output.txt -t 0.75
+python snpeff-consistency.py -o output --mode [strict|rule|specific] -t threshold -d distance --stats input.vcf
 ```
 
 ## Arguments
 
 - `input.vcf`: Input VCF file with SNPEff annotations
+- `--mode`: Analysis mode (required)
+    - `strict`: All effects must be identical
+    - `rule`: Apply majority rule for position-based effects and first effect for feature-based
+    - `specific`: Look for specific effects of interest
 - `-o, --output`: Output file name (default: annotation_summary.txt)
 - `-t, --threshold`: Threshold for majority rule (default: 0.75)
+- `-d, --distance`: Distance threshold in bp for position-based effects
+- `--stats`:  Generate detailed statistics file
 
-## Output Format
-The tool produces a tab-delimited file with the following columns:
+## Analysis Modes
 
-- `chrom`: Chromosome
-- `pos`: Position
-- `strict_effect_bool`: True if SNP has only one effect
-- `strict_effect_name`: The effect name (or "undefined" if multiple effects)
-- `majority_rule_bool`: True if any effect appears above threshold
-- `majority_rule_effect`: The majority effect, with special cases:
-    - `Effect name`: When a clear majority exists
-    - `tie:EFFECT1=EFFECT2`: When two effects have equal counts
-    - `unclear`:EFFECT=XX%: When no effect reaches threshold
-    - `+SI` suffix: Indicates presence of short intron annotation
+### Strict Mode
 
-## Features
-- Handles position-based effects (Upstream/Downstream/UTRs) with distance information
-- Integrates custom annotations (currently short-introns)
-- Provides clear indication of ambiguous cases
-- Configurable majority threshold
+Checks if all annotations for a SNP are identical. Useful for identifying SNPs with clear, unambiguous effects.
+
+### Rule Mode
+
+Applies different rules based on effect type:
+
+- Position-based effects (UPSTREAM, DOWNSTREAM, etc.): Uses majority rule with optional distance filtering
+- Feature-based effects (NON_SYNONYMOUS_CODING, etc.): Uses first effect (most severe)
+
+### Specific Mode
+
+Looks for specific effect types with priority handling:
+
+- NON_SYNONYMOUS_CODING
+- SYNONYMOUS_CODING
+- INTERGENIC
+- INTRON
+
+## Output Files
+
+1. Main output (tab-separeted):
+```bash
+chrom    pos    has_custom_annotation    custom_annotation_type    [mode-specific-columns]
+```
+
+2. Statistics file (when --stats is used):
+- Custom annotation counts
+- Effect type distribution
+- Consistency statistics
+
+## Exemples
+
+1. Strict mode analysis:
+```bash
+python snpeff-consistency.py -o results --mode strict input.vcf 
+```
+
+2. Rule mode with distance threshold:
+```bash
+python snpeff-consistency.py -o results --mode rule -t 0.8 -d 500 input.vcf
+```
+
+3. Specific effect analysis with statistics:
+```bash
+python snpeff-consistency.py -o results.txt --mode specific --stats input.vcf
+```
+
+## Effect Types
+### Position-based Effects
+
+- DOWNSTREAM
+- UPSTREAM
+- UTR_3_PRIME
+- UTR_5_PRIME
+- EXON
+- INTERGENIC
+- INTRON
+- SPLICE_SITE_REGION
+- SPLICE_SITE_REGION+EXON
+- SPLICE_SITE_REGION+INTRON
+
+### Feature-based Effects
+
+- NON_SYNONYMOUS_CODING
+- SYNONYMOUS_CODING
+- STOP_GAINED
+- STOP_LOST
+- START_LOST
+And other coding/functional variants
+
+## Logging
+The tool creates a log file (snpeff_consistency.log) containing:
+
+- Parameter settings
+- Processing statistics
+- Warnings and errors
+- Analysis summary
 
 ## Future Development
 ### Planned Features
 
-- Distance-based majority rule implementation
 - Abstract handling of custom annotations
 - Support for multiple custom annotation types
-- Enhanced distance-based analysis
-
-## Implementation Details
-The distance-based majority rule will consider both effect type and distance to features, allowing for more nuanced analysis of position-dependent effects.
 
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.

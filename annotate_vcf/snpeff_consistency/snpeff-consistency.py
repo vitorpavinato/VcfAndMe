@@ -538,7 +538,7 @@ def parse_arguments():
                        help='Input VCF file')
 
     parser.add_argument('-o', '--output',
-                       default='annotation_summary.txt',
+                       default='annotation_summary',
                        help='Output file name (default: annotation_summary.txt)')
 
     parser.add_argument('--mode',
