@@ -1,0 +1,9 @@
+chrom	pos	has_custom_annotation	custom_annotation_type	rule_effect_bool	rule_effect_name	distance_filtered
+chr2L	11514	False	NA	True	SYNONYMOUS_CODING	not_applicable
+chr2L	12460	False	NA	True	NON_SYNONYMOUS_CODING	not_applicable
+chr2L	15424	False	NA	True	SYNONYMOUS_CODING	not_applicable
+chr2L	15752	False	NA	True	INTRON	False
+chr2L	16816	False	NA	True	INTRON	False
+chr2L	19908	False	NA	True	NON_SYNONYMOUS_CODING	not_applicable
+chr2L	66656	True	dm6_short_introns	True	INTRON	True
+chr2L	667224	False	NA	True	INTRON	False

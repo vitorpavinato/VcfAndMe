@@ -374,7 +374,7 @@ class EffectAnalyzer:
         elif self.mode == 'rule':
             mode_header = "rule_effect_bool\trule_effect_name\tdistance_filtered"
         elif self.mode == 'specific':
-            mode_header = "effect_effect_bool\tspecific_effect_name"
+            mode_header = "specific_effect_bool\tspecific_effect_name"
 
         output = base_header + custom_header + mode_header + "\n"
 

@@ -1,0 +1,19 @@
+=== Summary of the Analysis ===
+Total SNPs processed: 33
+Consistent annotations: 6
+Inconsistent annotations: 27
+SNPs with custom annotations: 1
+
+=== Custom Annotation Stats ===
+Has custom annotations: {False: 32, True: 1}
+Custom annotation types: {'NA': 32, 'dm6_short_introns': 1}
+
+=== Effect Stats ===
+Effect consistency: {False: 27, True: 6}
+
+===Effect names distribution===
+undefined: 27
+SYNONYMOUS_CODING: 1
+INTRON: 3
+INTERGENIC: 1
+EXON: 1

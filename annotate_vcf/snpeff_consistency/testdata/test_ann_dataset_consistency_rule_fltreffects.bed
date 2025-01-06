@@ -1,0 +1,9 @@
+chr	start	end	effect	extra_info
+chr2L	11513	11514	SYNONYMOUS_CODING	False::NA::True::SYNONYMOUS_CODING::not_applicable
+chr2L	12459	12460	NON_SYNONYMOUS_CODING	False::NA::True::NON_SYNONYMOUS_CODING::not_applicable
+chr2L	15423	15424	SYNONYMOUS_CODING	False::NA::True::SYNONYMOUS_CODING::not_applicable
+chr2L	15751	15752	INTRON	False::NA::True::INTRON::False
+chr2L	16815	16816	INTRON	False::NA::True::INTRON::False
+chr2L	19907	19908	NON_SYNONYMOUS_CODING	False::NA::True::NON_SYNONYMOUS_CODING::not_applicable
+chr2L	66655	66656	INTRON	True::dm6_short_introns::True::INTRON::True
+chr2L	667223	667224	INTRON	False::NA::True::INTRON::False
