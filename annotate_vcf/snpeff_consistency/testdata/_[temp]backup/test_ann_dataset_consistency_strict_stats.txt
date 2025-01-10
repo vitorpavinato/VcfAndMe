@@ -17,12 +17,3 @@ SYNONYMOUS_CODING: 1
 INTRON: 3
 INTERGENIC: 1
 EXON: 1
-
-=== Codon Change Stats ===
-Codon consistency: {'consistent': 1, 'inconsistent': 0, 'not_applicable': 32}
-
-===Effect with codons===
-SYNONYMOUS_CODING: 1
-
-===Codon Change Distribution===
-TTT>TTC: 1

@@ -17,16 +17,3 @@ undefined: 17
 SYNONYMOUS_CODING: 2
 NON_SYNONYMOUS_CODING: 2
 INTRON: 10
-
-=== Codon Change Stats ===
-Codon consistency: {'consistent': 4, 'inconsistent': 0, 'not_applicable': 29}
-
-===Effect with codons===
-SYNONYMOUS_CODING: 2
-NON_SYNONYMOUS_CODING: 2
-
-===Codon Change Distribution===
-CGC>CGT: 1
-CAT>CGT: 1
-TTT>TTC: 1
-AGT>TGT: 1

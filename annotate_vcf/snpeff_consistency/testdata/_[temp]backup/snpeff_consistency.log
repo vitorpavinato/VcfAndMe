@@ -1,0 +1,27 @@
+2024-12-19 18:23:48,413 - INFO - Mode: strict
+2024-12-19 18:23:48,413 - WARNING - Output files testdata/test_ann_dataset_consistency_strict* already exist and will be overwritten
+2024-12-19 18:23:48,415 - INFO - Analysis Completed Successfully!
+2024-12-19 18:23:48,415 - INFO - Summary of the Analysis:
+2024-12-19 18:23:48,415 - INFO - Total SNPs processed: 33
+2024-12-19 18:23:48,415 - INFO - Consistent annotations: 6
+2024-12-19 18:23:48,415 - INFO - Inconsistent annotations: 27
+2024-12-19 18:23:48,415 - INFO - SNPs with custom annotations: 1
+2024-12-19 18:23:48,521 - INFO - Mode: rule
+2024-12-19 18:23:48,521 - INFO -  + Majority rule threshold: 0.75
+2024-12-19 18:23:48,521 - INFO -  + Distance threshold: 100
+2024-12-19 18:23:48,521 - WARNING - Output files testdata/test_ann_dataset_consistency_rule* already exist and will be overwritten
+2024-12-19 18:23:48,524 - INFO - Analysis Completed Successfully!
+2024-12-19 18:23:48,524 - INFO - Summary of the Analysis:
+2024-12-19 18:23:48,524 - INFO - Total SNPs processed: 33
+2024-12-19 18:23:48,524 - INFO - Consistent annotations: 30
+2024-12-19 18:23:48,524 - INFO - Inconsistent annotations: 3
+2024-12-19 18:23:48,524 - INFO - SNPs with custom annotations: 1
+2024-12-19 18:23:48,524 - INFO - SNPs with distance filtering: 11
+2024-12-19 18:23:48,632 - INFO - Mode: specific
+2024-12-19 18:23:48,632 - WARNING - Output files testdata/test_ann_dataset_consistency_specific* already exist and will be overwritten
+2024-12-19 18:23:48,634 - INFO - Analysis Completed Successfully!
+2024-12-19 18:23:48,634 - INFO - Summary of the Analysis:
+2024-12-19 18:23:48,634 - INFO - Total SNPs processed: 33
+2024-12-19 18:23:48,634 - INFO - Consistent annotations: 16
+2024-12-19 18:23:48,634 - INFO - Inconsistent annotations: 17
+2024-12-19 18:23:48,634 - INFO - SNPs with custom annotations: 1
