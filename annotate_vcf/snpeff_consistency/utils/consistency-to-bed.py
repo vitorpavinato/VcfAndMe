@@ -2,12 +2,55 @@
 Convert the consistency table to a BED file
 """
 
-#!/usr/bin/env python3
-
 import argparse
 
+# Define valid effects (from snpeff_consistency.py)
+POSITION_BASED_EFFECTS = {
+    'DOWNSTREAM',
+    'UPSTREAM', 
+    'UTR_3_PRIME', 
+    'UTR_5_PRIME', 
+    'EXON',
+    'INTERGENIC',
+    'INTRON',
+    'SPLICE_SITE_REGION',
+    'SPLICE_SITE_REGION+EXON',
+    'SPLICE_SITE_REGION+INTRON'
+}
+
+FEATURE_BASED_EFFECTS = {
+    'NON_SYNONYMOUS_CODING',
+    'NON_SYNONYMOUS_START',
+    'NON_SYNONYMOUS_CODING+SPLICE_SITE_REGION',
+    'NON_SYNONYMOUS_START+SPLICE_SITE_REGION'
+    'SPLICE_SITE_ACCEPTOR+INTRON',
+    'SPLICE_SITE_DONOR+INTRON',
+    'SPLICE_SITE_REGION+SYNONYMOUS_CODING',
+    'SPLICE_SITE_REGION+SYNONYMOUS_STOP',
+    'START_GAINED',
+    'START_LOST',
+    'START_LOST+SPLICE_SITE_REGION',
+    'STOP_GAINED',
+    'STOP_LOST',
+    'STOP_LOST+SPLICE_SITE_REGION',
+    'STOP_GAINED+SPLICE_SITE_REGION',
+    'SYNONYMOUS_CODING',
+    'SYNONYMOUS_STOP'
+}
+
+SPECIFIC_EFFECTS = {
+        'INTERGENIC',
+        'INTRON',
+        'SYNONYMOUS_CODING',
+        'NON_SYNONYMOUS_CODING'
+    }
+
+VALID_EFFECTS = set(POSITION_BASED_EFFECTS | FEATURE_BASED_EFFECTS | SPECIFIC_EFFECTS)
+
 def parse_arguments():
-    """Parse command line arguments"""
+    """
+    Parse command line arguments
+    """
     parser = argparse.ArgumentParser(description='Convert filtered consistency table to BED format')
     
     parser.add_argument('input',
@@ -20,7 +63,10 @@ def parse_arguments():
     return parser.parse_args()
 
 def table_to_bed(input_file, output_file):
-    """Convert filtered consistency table to BED format"""
+    """
+    Convert filtered consistency table to BED format
+    """
+
     with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
 
         # Write header required by vcftools
@@ -42,6 +88,7 @@ def table_to_bed(input_file, output_file):
             effect = None
             for field in fields[2:]:
                 if field in ['INTRON', 'SYNONYMOUS_CODING', 'NON_SYNONYMOUS_CODING']:
+                # if field in VALID_EFFECTS:
                     effect = field
                     break
 
@@ -71,7 +118,9 @@ def table_to_bed(input_file, output_file):
             outfile.write(f"{entry[0]}\t{entry[1]}\t{entry[2]}\t{entry[3]}\t{entry[4]}\n")
 
 def main():
-    """Main function"""
+    """
+    Main function
+    """
     args = parse_arguments()
     table_to_bed(args.input, args.output)
 

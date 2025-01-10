@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Filter SNPeff-consistency output based on mode and effects
 """
@@ -23,17 +21,20 @@ POSITION_BASED_EFFECTS = {
 
 FEATURE_BASED_EFFECTS = {
     'NON_SYNONYMOUS_CODING',
-    'NON_SYNONYMOUS_CODING+SPLICE_SITE_REGION',
     'NON_SYNONYMOUS_START',
+    'NON_SYNONYMOUS_CODING+SPLICE_SITE_REGION',
+    'NON_SYNONYMOUS_START+SPLICE_SITE_REGION'
     'SPLICE_SITE_ACCEPTOR+INTRON',
     'SPLICE_SITE_DONOR+INTRON',
     'SPLICE_SITE_REGION+SYNONYMOUS_CODING',
     'SPLICE_SITE_REGION+SYNONYMOUS_STOP',
     'START_GAINED',
     'START_LOST',
+    'START_LOST+SPLICE_SITE_REGION',
     'STOP_GAINED',
     'STOP_LOST',
     'STOP_LOST+SPLICE_SITE_REGION',
+    'STOP_GAINED+SPLICE_SITE_REGION',
     'SYNONYMOUS_CODING',
     'SYNONYMOUS_STOP'
 }
@@ -48,10 +49,12 @@ SPECIFIC_EFFECTS = {
 VALID_EFFECTS = set(POSITION_BASED_EFFECTS | FEATURE_BASED_EFFECTS | SPECIFIC_EFFECTS)
 
 def validate_effects(effects):
-    """Validate that all provided effects are valid"""
+    """
+    Validate that all provided effects are valid
+    """
     if not effects:
         return True
-        
+   
     invalid_effects = [effect for effect in effects if effect not in VALID_EFFECTS]
     if invalid_effects:
         print(f"Error: Invalid effects provided: {', '.join(invalid_effects)}", file=sys.stderr)
@@ -61,7 +64,9 @@ def validate_effects(effects):
 
 
 def parse_arguments():
-    """Parse command line arguments"""
+    """
+    Parse command line arguments
+    """
     parser = argparse.ArgumentParser(description='Filter SNPeff-consistency output based on mode and effects')
 
     parser.add_argument('input',
@@ -89,7 +94,9 @@ def parse_arguments():
     return args
 
 def filter_consistency(input_file, output_file, mode, effects):
-    """Filter consistency table based on mode and effects"""
+    """
+    Filter consistency table based on mode and effects
+    """
 
     # Determine which columns to check based on mode
     if mode == 'rule':
@@ -120,7 +127,9 @@ def filter_consistency(input_file, output_file, mode, effects):
                 outfile.write(line)
 
 def main():
-    """Main function"""
+    """
+    Main function
+    """
     args = parse_arguments()
     filter_consistency(args.input, args.output, args.mode, args.effects)
 

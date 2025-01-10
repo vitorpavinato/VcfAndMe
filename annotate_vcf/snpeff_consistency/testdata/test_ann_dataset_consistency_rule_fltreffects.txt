@@ -1,0 +1,9 @@
+chrom	pos	has_custom_annotation	custom_annotation_type	codon_change	is_codon_change_consistent	codon_change_note	rule_effect_bool	rule_effect_name	distance_filtered
+chr2L	11514	False	NA	CGC>CGT	True	consistent	True	SYNONYMOUS_CODING	not_applicable
+chr2L	12460	False	NA	CAT>CGT	True	consistent	True	NON_SYNONYMOUS_CODING	not_applicable
+chr2L	15424	False	NA	TTT>TTC	True	consistent	True	SYNONYMOUS_CODING	not_applicable
+chr2L	15752	False	NA	NA	None	NA	True	INTRON	False
+chr2L	16816	False	NA	NA	None	NA	True	INTRON	False
+chr2L	19908	False	NA	AGT>TGT	True	consistent	True	NON_SYNONYMOUS_CODING	not_applicable
+chr2L	66656	True	dm6_short_introns	NA	None	NA	True	INTRON	True
+chr2L	667224	False	NA	NA	None	NA	True	INTRON	False

@@ -62,8 +62,7 @@ class EffectAnalyzer:
         distance_threshold (fload): Minimum distance between a SNP and a feature to evaluate the effect (default: None)
     """
  
-    # Define effect types - hard-coded
-    # Positional effects
+    # Define effect types
     POSITION_BASED_EFFECTS = {
         'DOWNSTREAM',
         'UPSTREAM', 
@@ -77,7 +76,6 @@ class EffectAnalyzer:
         'SPLICE_SITE_REGION+INTRON' #  moved from feature-based
     }
 
-    # Feature-based effects
     FEATURE_BASED_EFFECTS = {
         'NON_SYNONYMOUS_CODING', # has codon
         'NON_SYNONYMOUS_START', # has codon
