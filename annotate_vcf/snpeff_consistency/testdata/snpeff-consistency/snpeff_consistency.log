@@ -1,0 +1,24 @@
+2025-01-14 15:28:04,257 - INFO - Mode: strict
+2025-01-14 15:28:04,258 - INFO - Analysis Completed Successfully!
+2025-01-14 15:28:04,258 - INFO - Summary of the Analysis:
+2025-01-14 15:28:04,258 - INFO - Total SNPs processed: 33
+2025-01-14 15:28:04,259 - INFO - Consistent annotations: 6
+2025-01-14 15:28:04,259 - INFO - Inconsistent annotations: 27
+2025-01-14 15:28:04,259 - INFO - SNPs with custom annotations: 1
+2025-01-14 15:28:04,371 - INFO - Mode: rule
+2025-01-14 15:28:04,371 - INFO -  + Majority rule threshold: 0.75
+2025-01-14 15:28:04,371 - INFO -  + Distance threshold: 100
+2025-01-14 15:28:04,374 - INFO - Analysis Completed Successfully!
+2025-01-14 15:28:04,374 - INFO - Summary of the Analysis:
+2025-01-14 15:28:04,374 - INFO - Total SNPs processed: 33
+2025-01-14 15:28:04,374 - INFO - Consistent annotations: 30
+2025-01-14 15:28:04,374 - INFO - Inconsistent annotations: 3
+2025-01-14 15:28:04,374 - INFO - SNPs with custom annotations: 1
+2025-01-14 15:28:04,374 - INFO - SNPs with distance filtering: 11
+2025-01-14 15:28:04,481 - INFO - Mode: specific
+2025-01-14 15:28:04,483 - INFO - Analysis Completed Successfully!
+2025-01-14 15:28:04,483 - INFO - Summary of the Analysis:
+2025-01-14 15:28:04,483 - INFO - Total SNPs processed: 33
+2025-01-14 15:28:04,483 - INFO - Consistent annotations: 16
+2025-01-14 15:28:04,483 - INFO - Inconsistent annotations: 17
+2025-01-14 15:28:04,483 - INFO - SNPs with custom annotations: 1

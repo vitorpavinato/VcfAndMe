@@ -3,11 +3,11 @@ VCFtools - 0.1.16
 (C) Adam Auton and Anthony Marcketta 2009
 
 Parameters as interpreted:
-	--vcf test_ann_dataset.vcf
+	--vcf ../testdata/test_ann_dataset.vcf
 	--recode-INFO-all
-	--out test_ann_dataset_consistency_rule_fltreffects_
+	--out ../testdata/snpeff-consistency/filtered-consistency/test_ann_dataset_consistency_rule_fltreffects
 	--recode
-	--bed test_ann_dataset_consistency_rule_fltreffects.bed
+	--bed ../testdata/snpeff-consistency/filtered-consistency/test_ann_dataset_consistency_rule_fltreffects.bed
 
 Warning: Expected at least 2 parts in INFO entry: ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes, for each ALT allele, in the same order as listed">
 Warning: Expected at least 2 parts in INFO entry: ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes, for each ALT allele, in the same order as listed">
