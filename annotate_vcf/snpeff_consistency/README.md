@@ -65,11 +65,10 @@ Applies different rules based on effect type:
 ### Specific Mode
 
 Looks for specific effect types with priority handling:
-
-- NON_SYNONYMOUS_CODING
-- SYNONYMOUS_CODING
 - INTERGENIC
 - INTRON
+- SYNONYMOUS_CODING
+- NON_SYNONYMOUS_CODING
 
 ## Output Files
 
@@ -117,11 +116,22 @@ python snpeff-consistency.py -o results.txt --mode specific --stats input.vcf
 ### Feature-based Effects
 
 - NON_SYNONYMOUS_CODING
-- SYNONYMOUS_CODING
+- NON_SYNONYMOUS_START
+- NON_SYNONYMOUS_CODING+SPLICE_SITE_REGION/
+- NON_SYNONYMOUS_START+SPLICE_SITE_REGION
+- SPLICE_SITE_ACCEPTOR+INTRON
+- SPLICE_SITE_DONOR+INTRON
+- SPLICE_SITE_REGION+SYNONYMOUS_CODING
+- SPLICE_SITE_REGION+SYNONYMOUS_STOP
+- START_GAINED
+- START_LOST
+- START_LOST+SPLICE_SITE_REGION
 - STOP_GAINED
 - STOP_LOST
-- START_LOST
-And other coding/functional variants
+- STOP_LOST+SPLICE_SITE_REGION
+- STOP_GAINED+SPLICE_SITE_REGION
+- SYNONYMOUS_CODING
+- SYNONYMOUS_STOP
 
 ## Logging
 The tool creates a log file (snpeff_consistency.log) containing:
