@@ -48,6 +48,7 @@ python snpeff-consistency.py -o output --mode [strict|rule|specific] -t threshol
 - `-t, --threshold`: Threshold for majority rule (default: 0.75)
 - `-d, --distance`: Distance threshold in bp for position-based effects
 - `--stats`:  Generate detailed statistics file
+- `--codon_stats`: Generate codon-related summary statistics
 
 ## Analysis Modes
 
@@ -81,6 +82,11 @@ chrom    pos    has_custom_annotation    custom_annotation_type    [mode-specifi
 - Custom annotation counts
 - Effect type distribution
 - Consistency statistics
+
+2.1. Codon Statistics (when --codon_stats is used):
+- Codon changes consistency stats
+- Effects with codon changes
+- Codon change distribution
 
 ## Exemples
 
