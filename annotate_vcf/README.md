@@ -1,11 +1,15 @@
-# How to annotate a vcf and convert it to a tsv table
+# Annotate a vcf
 
-Here I show how to run the annotation pipeline on a vcf file (that was filtered out for tri-allelic SNPs).
+Here we have a pipeline that takes the file produced by [remake_vcf](https://github.com/vitorpavinato/VcfAndMe/tree/main/remake_vcf) pipeline and annotate it with [SNPEff](https://pcingola.github.io/SnpEff/) and [SIFT4g](https://sift.bii.a-star.edu.sg/sift4g/). 
+
+Here is how you can run the pipeline in the script `pipeline_to_annotate_vcf.py`.
+(Note: VCF files from `remake_vcf` should be filter out for >2 alleles SNPs)
+
 ```zsh
 python pipeline_to_annotate_vcf.py -i examples/biallelic/example_remade_rooted_lifted_filtered.vcf -d Drosophila_melanogaster -b examples/intervals/short_introns.bed -o examples/snpeff -s /Users/tur92196/local/sift4g/BDGP6.83 -f examples/sift4g
 ```
 
-To run this pipeline like above, you should have installed [SNPEff](https://pcingola.github.io/SnpEff/) and [SIFT4g](https://sift.bii.a-star.edu.sg/sift4g/). SIFT4 is optional if you don't provide a PATH to a database. But if you provided, you should provid the PATH for an output folder. Another optional argument is the PATH for the file containing intervals you want to include in SNPEff annotation. It should be a BED-like file containing somehow "custom" annotations. The pipeline looks for the presence of a file PATH and when triggered, it implements SNPEff `-interval` argument.
+To run above pipeline, you should have installed SNPEff and SIFT4g. SIFT4 is optional if you don't provide a PATH to a database. But if you provided, you should provid the PATH for an output folder. Another optional argument is the PATH for the file containing intervals you want to include in SNPEff annotation. It should be a BED-like file containing somehow "custom" annotations. The pipeline looks for the presence of a file PATH and when triggered, it implements SNPEff `-interval` argument.
 
 Make sure to change the necessary SNPEff and SIFT4g PATHs in the `annotate_vcf/config.ini` file.
 
@@ -27,7 +31,7 @@ options:
                         Output folder for SIFT4G annotations (default: None)
 ```
 
-An attentive reader should have noticed that to run the pipeline above I provided in the command-line a file containing intervals of short-introns. You can provide any BED-like file with custom annotations, it doesn't need to be short-introns. Becaue I included an example with short-introns, for completeness I provide here a script that I developed to create the BED file containing short-introns. It can be used as a templete for any interval present in a BED file derived from a GFF you want to retain or filter out. Here is the command:
+An attentive reader should have noticed that to run the pipeline above you need to provide in the command-line a file containing intervals of short-introns. You can provide any BED-like file with custom annotations, it doesn't need to be short-introns. For completeness we provide here a script that we developed for creating a BED file containing short-introns intervals. It can be used as a templete for any interval present in a BED file derived from a GFF you want to retain or filter out. Here is the command:
 ```zsh
 python get_short_introns_from_bed.py -i  examples/intervals/introns.bed -o examples/intervals/short_introns.bed -c chr2L -s 86 -t 8
 ```
@@ -46,7 +50,9 @@ options:
   -t TRAILLING_SIZE     Trailling size (default: 8)
 ```
 
-After running the pipeline, you can convert the annotated vcf to a tsv table:
+The pipeline first annotates the input VCF with SNPEff and produce a VCF for each chromosome named like this `*_remade_rooted_lifted_filtered_ann.vc`. If no interval file is passed, the pipeline only runs SNPEff using the *Drosophila melanogaster* genome build 6 derived database. If an interval file is provided, it takes the annotated VCFs and run SNPEff again with an interval file, but do not use the *D. melanogaster* database. It also creates annother annotated VCF with the `_simplified.vcf` suffix. This VCF contains the same variants, but only the first effect of each variant annotated is taken. The "simplified" VCF files can be annotated with SIFT4g. The simplified VCFs annotated with SIFT4g can also be converted into a table.
+
+\[OPTIONAL\] After running the pipeline, you can convert the annotated VCF to a TSV table:
 ```zsh
 python vcf_to_tsv.py -i examples/sift4g/example_remade_rooted_lifted_filtered_ann_simplified_SIFTpredictions.vcf -o examples/tables/example_remade_rooted_lifted_filtered_ann_table_snpeff_sift4g.vcf -r PATH/TO/REFERENCE -s PATH/TO/SAMTOOLS -f 3 -c short_introns.bed -n SI -e
 ```
