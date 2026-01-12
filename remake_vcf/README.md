@@ -6,6 +6,7 @@ I recommend you structure your working directory as something like this:
 ```bash
 .    # My root folder is named DGN (Here I also have data from other populations)
 ├── dpgp3
+│   ├── VcfAndMe # A copy of this repository 
 │   ├── dpgp3.txt
 │   ├── masked
 │   │   ├── Chr2L
