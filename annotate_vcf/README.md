@@ -52,6 +52,14 @@ options:
 
 The pipeline first annotates the input VCF with SNPEff and produce a VCF for each chromosome named like this `*_remade_rooted_lifted_filtered_ann.vc`. If no interval file is passed, the pipeline only runs SNPEff using the *Drosophila melanogaster* genome build 6 derived database. If an interval file is provided, it takes the annotated VCFs and run SNPEff again with an interval file, but do not use the *D. melanogaster* database. It also creates annother annotated VCF with the `_simplified.vcf` suffix. This VCF contains the same variants, but only the first effect of each variant annotated is taken. The "simplified" VCF files can be annotated with SIFT4g. The simplified VCFs annotated with SIFT4g can also be converted into a table.
 
+Here is command used to annotate with SNPEff:
+```zsh
+java -jar snpeff ann -c snpeff_config -classic
+          -noStats -csvStats csv_stats_file -v database
+          input_file > output_file
+        
+```
+
 \[OPTIONAL\] After running the pipeline, you can convert the annotated VCF to a TSV table:
 ```zsh
 python vcf_to_tsv.py -i examples/sift4g/example_remade_rooted_lifted_filtered_ann_simplified_SIFTpredictions.vcf -o examples/tables/example_remade_rooted_lifted_filtered_ann_table_snpeff_sift4g.vcf -r PATH/TO/REFERENCE -s PATH/TO/SAMTOOLS -f 3 -c short_introns.bed -n SI -e
