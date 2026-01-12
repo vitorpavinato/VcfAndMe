@@ -6,7 +6,6 @@ I recommend you structure your working directory as something like this:
 ```bash
 .    # My root folder is named DGN (Here I also have data from other populations)
 ├── dpgp3
-│   ├── dmel_data # This is a copy of the GitHub repository
 │   ├── dpgp3.txt
 │   ├── masked
 │   │   ├── Chr2L
@@ -26,7 +25,7 @@ I recommend you structure your working directory as something like this:
 ```
 
 ### Download DGN data
-First download the consensus sequence FASTA from [DGN](https://www.johnpool.net/genomes.html) for the target population (sample). Go to the bottom of the page where you see a bunch of links like \<name\>_SEQ. These are the links to a compressed folder that contains `.seq` files with consensus FASTA sequences for each individual organized for each chromosome, for each collection of samples. Here I am showing as an example the analysis of data from DPGP3 that contains a collection of 197 Zambia genomess
+Download the FASTA sequence data from [DGN](https://www.johnpool.net/genomes.html) for the target population. This is the link for DPGP3 [data](http://pooldata.genetics.wisc.edu/dpgp3_sequences.tar.bz2). This link points to a compressed folder (`.tar.bz2`) containing `SEQ` files for each of *Drosophila melanogaster* chromosome. Each subfolder contains `SEQ` files for each individual for each chromosome from the *D. melanogaster* Zambia population, which had 197 genomes sequenced.
 
 ```zsh
 # From the root folder of your project:
@@ -46,9 +45,9 @@ mv data/dpgp3_sequences/dpgp3_Chr* dpgp3/originals
 ```
 
 ### Run DGN masking scripts
-Second, download the [masking package](http://johnpool.net/masking.zip) also from DGN. It contains a set of files and scripts used to mask problematic sites previously identified containing traces of identity-by-descent (IBD) or admixture. Copy both scripts and the interval files (two `.csv` files) inside each chromosome folder (that should now be inside `originals`), and run the two `Perl`` scripts. Here I am showing how to run them inside chromosome 2L folder (I am showing only the analysis of Chr2L, for the rest of this document).
+Download the [masking package](http://johnpool.net/masking.zip) also from DGN. It contains a set of files and scripts used to mask problematic sites previously identified containing traces of identity-by-descent (IBD) or admixture. Copy both scripts and the interval files (two `CSV` files) inside each chromosome folder (that should now be inside `originals`), and run the two `Perl`` scripts. Here I am showing how to run them inside chromosome 2L folder (I am showing only the analysis of Chr2L, for the rest of this document).
 
-You can either delete the compressed files or keep them. You can create a folder in the root of your project called `packages` to save the scrips, CSVs and the original `.zip` files in there.
+You can either delete the compressed files or keep them. You can create a folder in the root of your project called `packages` to save the scrips, CSVs and the original `ZIP` files in there.
 
 Download the masking package:
 ```zsh
@@ -72,7 +71,7 @@ perl ibd_mask_seq.pl
 perl admixture_mask_seq.pl
 ```
 
-You need to repeat it for all folders (I know, it is tedious, I stopped at chr3R after running the other three major chromosomes - maybe you can open four terminal windows and run then one script at time, but in four different chromosomes...)
+You need to repeat it for all folders.
 
 If the individual has IBD or Admixture traces, an `N` will replace the nucleotide on the problematic position. For each chromosome, the result is a set of individuals genomes (masked or not). The unmasked files will be moved to the folder corresponding to the script you ran. After running the two script you should have the masked files and two folders: `unmasked_admixture` and `unmasked_ibd` and the masked files, one for each individual. Move the masked files to the corresponding folder named with the chromosome name inside the folder `masked`.
 
@@ -82,16 +81,16 @@ cd ../..masked/Chr2L
 ```
 
 ### Add sample names to each sequence
-These `.seq` files don't have header (I don't know why?). Copy the name of each individual and place it as a header (using bash please with something like ```ls -1 *.seq | rev | cut -c11- | rev > ../../dpgp3.txt```). You can keep this files at the `dpgp3` directory of your project, as it is shown in the above directory structure. I prepared a script that takes the names of each individual placed in a one-column `.txt` file (as the one created above), opens the corresponding `.seq`, and adds the corresponding name of the sample as the header:
+These `SEQ` files don't have header. Copy the name of each individual using bash ```ls -1 *.seq | rev | cut -c11- | rev > ../../dpgp3.txt```. You can keep this files at the `dpgp3` directory of your project, as it is shown in the above directory structure. Use the following command to add the sample name to each SEQ file within each chromosome folder. This script takes the names of each individual placed in a one-column `TXT` file `dpgp3.txt`, opens the corresponding `SEQ` file, and adds the corresponding name of the sample as the header:
 
 ```zsh
 # You should run it for each chromosome file. Inside the folder for the chromosome, type:
-python ../../dmel_data/remake_vcf/add_head_to_fasta_files.py -s _Chr2L.seq -n ../../dpgp3.txt
+python ../../VcfAndMe/remake_vcf/add_head_to_fasta_files.py -s _Chr2L.seq -n ../../dpgp3.txt
 ```
 Where `-s` means suffix and `-n` means the file with the sample names.
 
 ### Run snp-site
-Then concatenate all `.seq` file by chromosome using `cat`. I did something like this. Inside the folder with all sequences from the chromosome 2L, type:
+Then concatenate all `SEQ` file by chromosome using `cat`. I did something like this. Inside the folder with all sequences from the chromosome 2L, type:
 
 ```zsh
 mkdir ../fastas
@@ -99,7 +98,9 @@ cat *.seq > ../fastas/ZI_Chr2L.fasta
 cd ../fastas
 ```
 
-Then, run [snp-site](https://sanger-pathogens.github.io/snp-sites/) to convert the *multi-fasta alignment* to a somehow descent and usable `.vcf` file. Here is how the command looks like (make sure that `snp-sites` is in your PATH, either absolute or when a conda environment is active):
+Do the same for each chromosome.
+
+Then, run [snp-site](https://sanger-pathogens.github.io/snp-sites/) to convert the *multi-fasta alignment* to a `VCF` file. Here is how the command looks like (make sure that `snp-sites` is in your PATH, either absolute or when a conda environment is active):
 
 ```zsh
 # Run snp-sites in each chromosome alignment
@@ -115,9 +116,9 @@ A note here: If you are trying to install snp-site from conda on a Apple compute
 conda config --env --set subdir osx-64
 ```
 
-This will create a `.vcf` from the `.fasta` file. Here is important to have all sequences with their corresponding header. Usually it is the sample name. The VCF will have then the same ID as the FASTA for each sample. 
+This will create a `VCF` from the `FASTA` file. Here is important to have all sequences with their corresponding header. Usually it is the sample name. The VCF will have then the same ID as the FASTA for each sample. 
 
-Snp-site has no way to know which base in the multi-fasta alignment is in the reference base, so I prepared a script to deal with this (see [remake_vcf](https://github.com/vitorpavinato/dmel_data/tree/main/remake_vcf) folder). The script also identify which genotype number corresponds to the missing character `*` and change the number to `./.`, effectively making the masking done before usable. And it re-sort the order of alternative alleles and make genotype codes accordingly to the re-ordering. The most important ordering is the true reference and the alternatives, so the allele that is the reference in the genome (dm3 or the flybase release 5) will be `0` and reference genotypes will be `0/0`. 
+Snp-site has no way to know which base in the multi-fasta alignment is in the reference base, so I prepared a script to deal with this. The script also identify which genotype number corresponds to the missing character `*` and change the number to `./.`, effectively making the masking done before usable. And it re-sort the order of alternative alleles and make genotype codes accordingly to the re-ordering. The most important ordering is the true reference and the alternatives, so the allele that is the reference in the genome (dm3 or the flybase release 5) will be `0` and reference genotypes will be `0/0`. 
 
 Here is how you run `remake_vcf`. There are two examples below: 1- for the entire 2L vcf, another with a sample of SNP from chromosome 2L (called example). For the rest of this tutorial I will be using this vcf.
 
@@ -127,20 +128,22 @@ mkdir -p vcfs/remade # to store the fixed vcf files
 cd vcfs
 
 # An example on how to run on a vcf derived from the aligments of chromosome 2L samples
-python ../../dmel_data/remake_vcf/remake_vcf.py -i ZI_Chr2L.vcf -r ../../../reference/dm3.fa -c chr2L -l 23011544 -o remade/ZI_Chr2L_remade.vcf -s /Users/tur92196/local/samtools1_8/bin/samtools
+python ../../VcfAndMe/remake_vcf/remake_vcf.py -i ZI_Chr2L.vcf -r ../../../reference/dm3.fa -c chr2L -l 23011544 -o remade/ZI_Chr2L_remade.vcf -s /Users/tur92196/local/samtools1_8/bin/samtools
 
-# To run the examples provided with the GitHub repository, you need to move insed the copy of the repository you downloaded.
-cd ../../dmel_data/remake_vcf
+# To run the examples provided with the GitHub repository, you need to move inside the copy of the repository you downloaded.
+cd ../../VcfAndMe/remake_vcf
 
 python remake_vcf.py -i example/example.vcf -r ../../../reference/dm3.fa -c chr2L -l 23011544 -o example/example_remade.vcf -s /Users/tur92196/local/samtools1_8/bin/samtools
 ```
 
-Where `-i`is the imput vcf you whant to fix, `-r` is the PATH for the reference genome the original DGN data was aligned to (dm3 also named as dmelr5), the `-c` chromosome name; `-l` is the length of the chromosome (you can put any number here, it is just to annoate the vcf with it); `-o`is the output and `-s` is the PATH for samtools as it is required (later I will probably remove this from the CLI interface, so make sure samtools is in your PATH).
+Where `-i`is the imput VCF you whant to fix, `-r` is the PATH for the reference genome the original DGN data was aligned to (dm3 also named as dmelr5), the `-c` chromosome name; `-l` is the length of the chromosome (you can put any number here, it is just to annoate the vcf with it); `-o`is the output and `-s` is the PATH for samtools as it is required (later I will probably remove this from the CLI interface, so make sure samtools is in your PATH).
 
 I advise to use the reference genomes (and annotations) stored at [UCSC genome browse](https://genome.ucsc.edu/cgi-bin/hgGateway) because the chromosomes are named with the same naming system as in the chain file. The chain files will be used in later steps to liftover the SNPs from dm3 (dmel r.5.x) to dm6 (dmel r.6.x).
 
 ### Rooting or annotating the SNPs with the ancestral state
-Now that we have a `better DGN vcf files`, we can determine the ancestral state of each SNP using a simple parsimony strategy. It is optional. If you don't need to know the AAs, you can jump to the next section. The idea here is to use the reference genome sequencing of one of *D. melanogaster* sister species to find the state before the two species splited from a common ancestor. I use *D. simulans* because, conviently, there is a version of this species genome that was aligned to *D. melanogaster* genome. This whole genome aligment underwent some manipulation to make sure the syntenic regions between the two species was present along with masked regions, in a way that the new genome of *D. simulans* has the same number of bp as in *D. melanogaster* genome. This make any sequence comparison straigthford. This alignment was done on dm3, so were are good to go.
+Now that we have a VCFs from DGN aligments, we can determine the ancestral allele (AA) states of each SNP using a simple parsimony strategy. It is optional. If you don't need to know the AAs, you can jump to the next section. The idea here is to use the reference genome sequencing of one of *D. melanogaster* sister species to find the state before the two species splited from a common ancestor. I use *D. simulans* because, conviently, there is a version of this species genome that was aligned to *D. melanogaster* genome. This whole genome aligment underwent some manipulation to make sure the syntenic regions between the two species was present along with masked regions, in a way that the new genome of *D. simulans* has the same length (in bp) as in *D. melanogaster* genome. This make any sequence comparison straigthford. This alignment was done on dm3, so were are good to go.
+
+Before running the command you should download the pairwise alignment from [here](http://pooldata.genetics.wisc.edu/DGN11/simulans_sequences.tar.gz). The compressed folder contains one sequence from each chromosome. You should add a header on each fasta sequence (e.g `>2L`) and combine all chromosome sequences in one FASTA file named `dsim2_as_dmelr5.fasta`. Then run the following command to annotate the AA states.
 
 ```zsh
 python root_vcf_by_parsimony.py -i example/example_remade.vcf -o example/example_remade_rooted.vcf -r ../../../simulans_sequences/dsim2_as_dmelr5.fasta -s /Users/tur92196/local/samtools1_8/bin/samtools
@@ -157,12 +160,12 @@ GATK='/Users/tur92196/local/gatk-4.5.0.0/gatk-package-4.5.0.0-local.jar'
 ```
 
 To run GATK `LiftoverVcf`, you should have:
-- your `.vcf` you want to lift to the newest genome;
+- your `VCF` you want to lift to the newest genome;
 - the reference sequence of the target genome (the one you are lifting the SNPs to);
-- the associated `.dict` file (see how to get one below);
+- the associated `DICT` file (see how to get one below);
 - and the chain files, downloaded from UCSC (found [here](https://hgdownload.soe.ucsc.edu/goldenPath/dm3/liftOver/)), containing the chains from the oldest (here dm3) to the newest target genome (dm6).
 
-Go inside the folder you have the genome file of the target genome. There we will run, to obtain the `.dict` file. You can find the [documentation here](https://gatk.broadinstitute.org/hc/en-us/articles/360037422891-CreateSequenceDictionary-Picard-):
+Go inside the folder you have the genome file of the target genome. There we will run, to obtain the `DICT` file. You can find the [documentation here](https://gatk.broadinstitute.org/hc/en-us/articles/360037422891-CreateSequenceDictionary-Picard-):
 
 ```bash
 cd ../../../reference
